@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swxy.jwbookms.mapper.BookTotalMapper">
+
+    <update id="insertBookTotalByCurriclumPlan" parameterType="string">
+        INSERT
+        INTO book_total(uuid, two_level_college, major, grade, course_title, xqid, create_time, update_time, cla,
+                        submit_state)
+        select replace(md5(uuid()), "-", "") as uuid,
+               c.two_level_college           as two_level_college,
+               c.major                       as major,
+               c.grade                       as grade,
+               c.course_title                as course_title,
+               c.xqid                        as xqid,
+               now()                         as create_time,
+               now()                         as update_time,
+               s.cla                         as cal,
+               "0"                           as submit_state
+        from curriculum_plan c
+                 left join student_info s on c.major = s.major
+        where c.grade = s.grade
+          and c.xqid = #{xqid}
+        group by s.cla
+        order by s.cla
+    </update>
+
+    <select id="getBookTotalCountVo" resultType="com.swxy.jwbookms.pojo.VO.BookTotalCountVo">
+        select count(1) as total, count(isbn) as yet
+        from book_total
+        where xqid = #{xqid}
+    </select>
+</mapper>
