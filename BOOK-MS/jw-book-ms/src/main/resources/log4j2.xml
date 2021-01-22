@@ -70,6 +70,10 @@
         <Logger name="springfox.documentation" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
+        <!-- 排除其他无用信息 -->
+        <Logger name="org.hibernate.validator" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
 
         <root level="debug">
             <appender-ref ref="Console"/>

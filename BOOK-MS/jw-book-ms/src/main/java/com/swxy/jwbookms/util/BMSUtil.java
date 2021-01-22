@@ -8,11 +8,20 @@ public class BMSUtil {
     public static void test() {
     }
 
-    // TODO
+    /**
+     * 学期转换成汉字
+     *
+     * @param xqid
+     * @return
+     */
     public static String xqidToZh(String xqid) {
         AssertUtil.isXqid(xqid);
-        return null;
+        int i = Integer.parseInt(xqid.substring(xqid.length() - 1, xqid.length()));
+        if (i == 1) {
+            return xqid.substring(0, 4) + "年秋季";
+        } else {
+            return xqid.substring(5, 9) + "年春季";
+        }
     }
-
 
 }

@@ -22,7 +22,6 @@ import java.io.IOException;
 @RestControllerAdvice
 public class ExeceptionHandler {
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ExeceptionHandler.class);
 
     // 定义map，配置异常类型所对应的错误代码

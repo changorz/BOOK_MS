@@ -81,7 +81,7 @@ public class BookStoreController {
     })
     public Response getBookStore(@PathVariable String uuid) {
         BookStore one = bookStoreService.getById(uuid);
-        return null != one ? new DataResponseResult(one, CommonCode.FIND_AC) : ResponseResult.FAIL();
+        return new DataResponseResult(one, CommonCode.FIND_AC);
     }
 
     @PostMapping("/BookStore/{xqid}/improt/excel")

@@ -67,8 +67,10 @@ public class CommonListener<T> extends AnalysisEventListener<T> {
             bookStore.setBookPym(PinyinUtil.getFirstLetter(bookStore.getBookName(), "").toLowerCase());
             // 处理ISBN
             String s = bookStore.getIsbn().replaceAll("\\D", "");
-            if (s.length() < 13) {
+            if (s.length() < 12) {
                 log.error("excel书籍库添加失败,ISBN=" + bookStore.getIsbn());
+            } else if (s.length() == 12) {
+                s += 'X';
             }
             bookStore.setIsbn(s.substring(0, 13));
         }

@@ -63,12 +63,7 @@ public class MyCodeGenerator {
         StrategyConfig strategy = new StrategyConfig();
         // 要映射的表明
         strategy.setInclude(
-                "book_store",
-                "publishing_house",
-                "curriculum_plan",
-                "student_info",
-                "book_total",
-                "unbook"
+                "bms_user"
         );
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);

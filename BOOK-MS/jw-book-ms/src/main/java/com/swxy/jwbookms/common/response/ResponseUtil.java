@@ -3,6 +3,7 @@ package com.swxy.jwbookms.common.response;
 
 import com.swxy.jwbookms.common.response.code.CommonCode;
 import com.swxy.jwbookms.common.response.code.ResultCode;
+import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.common.response.plus.QueryResponseResult;
 import com.swxy.jwbookms.common.response.plus.QueryResult;
 import lombok.Data;
@@ -49,7 +50,6 @@ public class ResponseUtil {
 
     /**
      * 根据flag返回操作成功信息或者失败信息
-     *
      * @param flag
      * @param successMsg
      * @param failMag
@@ -57,6 +57,18 @@ public class ResponseUtil {
      */
     public static Response toResult(boolean flag, String successMsg, String failMag) {
         return flag ? ResponseResult.SUCCESS(successMsg) : ResponseResult.FAIL(failMag);
+    }
+
+    /**
+     * 根据flag返回操作成功查询的结果或者失败信息
+     *
+     * @param flag
+     * @param data    查询数据成功
+     * @param failMag 失败提示信息
+     * @return
+     */
+    public static Response toResult(boolean flag, Object data, String failMag) {
+        return flag ? new DataResponseResult(data, CommonCode.FIND_AC) : ResponseResult.FAIL(failMag);
     }
 
     /**

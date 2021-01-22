@@ -1,15 +1,19 @@
 package com.swxy.jwbookms.config.db;
 
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
+import org.apache.ibatis.reflection.MetaObject;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDateTime;
+
 //Spring boot方式
 @Configuration
 @MapperScan("com.swxy.jwbookms.mapper")
-public class MybatisPlusConfig {
+public class MybatisPlusConfig implements MetaObjectHandler {
 
     @Bean
     public PaginationInterceptor paginationInterceptor() {
@@ -23,5 +27,15 @@ public class MybatisPlusConfig {
         return paginationInterceptor;
     }
 
+    @Override
+    public void insertFill(MetaObject metaObject) {
+        this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+    }
+
+
+    @Override
+    public void updateFill(MetaObject metaObject) {
+        this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+    }
 
 }
