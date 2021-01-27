@@ -1,4 +1,4 @@
-package com.swxy.jwbookms.util;
+package com.swxy.jwbookms.enums;
 
 public enum CommonStringEnum {
     SCHOOL("中南林业科技大学涉外学院"),

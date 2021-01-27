@@ -17,7 +17,7 @@
     <properties>
         <java.version>1.8</java.version>
         <hutool.version>5.5.4</hutool.version>
-        <swagger.version>2.9.2</swagger.version>
+        <swagger.version>3.0.0</swagger.version>
         <myvatis-puls.version>3.4.1</myvatis-puls.version>
         <easyexcel.version>2.2.7</easyexcel.version>
         <fastjson.version>1.2.75</fastjson.version>

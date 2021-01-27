@@ -41,7 +41,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
         String username = authentication.getName();
         Map<String, Object> jwtMap = new HashMap<>();
         jwtMap.put("username", username);
-        String token = JwtUtils.generateTokenExpireInSeconds(jwtMap, rsaKeyProperties.getPrivateKey(), 720_000);
+        String token = JwtUtils.generateTokenExpireInSeconds(jwtMap, rsaKeyProperties.getPrivateKey(), 2 * 60 * 60);
         response.setContentType("application/json;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         Response responseData = new DataResponseResult(new HashMap<String, Object>() {{

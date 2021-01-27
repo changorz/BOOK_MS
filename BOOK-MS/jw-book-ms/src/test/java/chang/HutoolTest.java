@@ -39,7 +39,7 @@ public class HutoolTest {
 
     @Test
     public void t4() {
-        redisUtil.set("activeXQID", "2021春季");
+        // redisUtil.set("activeXQID", "2021春季");
     }
 
     public static void main(String[] args) {
