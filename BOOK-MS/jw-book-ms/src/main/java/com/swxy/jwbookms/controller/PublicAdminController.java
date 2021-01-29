@@ -1,7 +1,9 @@
 package com.swxy.jwbookms.controller;
 
+import com.swxy.jwbookms.common.exception.ExceptionCast;
 import com.swxy.jwbookms.common.response.Response;
 import com.swxy.jwbookms.common.response.ResponseUtil;
+import com.swxy.jwbookms.common.response.code.CommonCode;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.enums.RedisKey;
 import com.swxy.jwbookms.pojo.XqidBean;
@@ -15,11 +17,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+
+/**
+ * 公共资源管理类
+ *
+ * @author chang
+ */
 
 @Api(description = "公共的控制器(管理员设置接口): 包括学期id,下拉列表值的获取")
 @Slf4j
@@ -32,6 +42,20 @@ public class PublicAdminController {
     @Autowired
     private CommonService commonService;
 
+    private Set<String> selectorSet = new HashSet();
+
+    @PostConstruct
+    public void init() {
+        // 初始化下拉列表的set集合
+        // 出版社补充管理
+        selectorSet.add("publishingHouseHupplements");
+        // 专业名称管理
+        selectorSet.add("majors");
+        // 二级学院管理
+        selectorSet.add("twoLevelColleges");
+    }
+
+    // ======================================= 学期管理 =========================================
     @ApiOperation("增加一个新学期")
     @PostMapping("/addXq")
     public Response addXq(String xqid) {
@@ -79,4 +103,31 @@ public class PublicAdminController {
         XqidBean bean = new XqidBean(xqid, xqidValue, strings);
         return ResponseUtil.toResult(flag.get(), bean, "设置错误，学期不存在。");
     }
+
+    // ======================================= 下拉列表管理 =========================================
+    @ApiOperation("下拉列表管理:增加一条数据")
+    @PostMapping("/Selector/{redisKey}/{str}")
+    public Response addSelector(@PathVariable String redisKey, @PathVariable String str) {
+        // key 校验
+        if (!selectorSet.contains(redisKey)) {
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        // 开始操作
+        long l = redisUtil.sSet(redisKey, str);
+        return ResponseUtil.toResult(l > 0);
+    }
+
+    @ApiOperation("下拉列表管理:删除一条数据")
+    @DeleteMapping("/Selector/{redisKey}/{str}")
+    public Response deleteSelector(@PathVariable String redisKey, @PathVariable String str) {
+        // key 校验
+        if (!selectorSet.contains(redisKey)) {
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        // 开始操作
+        long l = redisUtil.setRemove(redisKey, str);
+        return ResponseUtil.toResult(l > 0);
+    }
+
+
 }
