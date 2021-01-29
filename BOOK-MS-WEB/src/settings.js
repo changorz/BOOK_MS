@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '教材填报统计系统',
+  title: '教材填报管理系统',
 
   /**
    * @type {boolean} true | false
