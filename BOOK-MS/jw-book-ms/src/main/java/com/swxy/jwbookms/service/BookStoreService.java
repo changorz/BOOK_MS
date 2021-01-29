@@ -14,8 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface BookStoreService extends IService<BookStore> {
 
-    boolean updateBookStoreByIsbnAndXqid(BookStore bookStore);
-
     Page queryBookStoreByPage(Page page, String xqid, String query);
 
     Page queryBookStoreAllByXqid(Page page, String xqid);

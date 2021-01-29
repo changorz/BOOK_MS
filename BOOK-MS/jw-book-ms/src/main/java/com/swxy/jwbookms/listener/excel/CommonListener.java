@@ -4,15 +4,17 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.excel.util.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.swxy.jwbookms.pojo.BookStore;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 用于BookStore Excel导入
@@ -26,7 +28,8 @@ public class CommonListener<T> extends AnalysisEventListener<T> {
      */
     private static final int BATCH_COUNT = 1000;
     private int count;
-    List list = new ArrayList<T>();
+    List<T> list = new ArrayList<T>();
+    Set<String> xqidSet;
     /**
      * 假设这个是一个DAO，当然有业务逻辑这个也可以是一个service。当然如果不用存储这个对象没用。
      */
@@ -41,6 +44,8 @@ public class CommonListener<T> extends AnalysisEventListener<T> {
     public CommonListener(IService service, String xqid) {
         this.service = service;
         this.xqid = xqid;
+        List<String> list = service.listObjs(new QueryWrapper<String>().select("isbn").eq("xqid", xqid));
+        xqidSet = list.stream().collect(Collectors.toSet());
     }
 
     /**
@@ -64,23 +69,32 @@ public class CommonListener<T> extends AnalysisEventListener<T> {
         if (oneData instanceof BookStore) {
             BookStore bookStore = (BookStore) oneData;
             // 处理拼音码
+            if (StringUtils.isEmpty(bookStore.getBookName())) {
+                log.warn("excel书籍库添加失败,BookName=" + bookStore.getBookName());
+                return;
+            }
             bookStore.setBookPym(PinyinUtil.getFirstLetter(bookStore.getBookName(), "").toLowerCase());
             // 处理ISBN
             String s = bookStore.getIsbn().replaceAll("\\D", "");
             if (s.length() < 12) {
-                log.error("excel书籍库添加失败,ISBN=" + bookStore.getIsbn());
+                // TODO 输出等级
+                log.warn("excel书籍库添加失败,ISBN=" + bookStore.getIsbn());
             } else if (s.length() == 12) {
                 s += 'X';
             }
             bookStore.setIsbn(s.substring(0, 13));
+            // 拿着ISBN和XQID去数据库中查询是否有重复的，有重复的异步修改
+            if (xqidSet.contains(bookStore.getIsbn())) {
+                // TODO 可以去修改他，这里先不处理
+                log.info("重复书籍 ISNB = " + bookStore.getIsbn());
+                return;
+            }
+            xqidSet.add(bookStore.getIsbn());
         }
         ReflectUtil.invoke(oneData, "setXqid", xqid);
-        log.info("解析到一条数据:{}", JSON.toJSONString(oneData));
         list.add(oneData);
-        // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (list.size() >= BATCH_COUNT) {
             saveData();
-            // 存储完成清理 list
             list.clear();
         }
     }

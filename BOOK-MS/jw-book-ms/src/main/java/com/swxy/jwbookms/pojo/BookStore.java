@@ -86,12 +86,13 @@ public class BookStore implements Serializable {
 
 
     @ExcelIgnore
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @ApiModelProperty(value = "创建时间", hidden = true)
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ExcelIgnore
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @ApiModelProperty(value = "修改时间", hidden = true)
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;

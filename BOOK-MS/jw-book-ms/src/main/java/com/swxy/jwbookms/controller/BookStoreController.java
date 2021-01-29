@@ -70,7 +70,7 @@ public class BookStoreController {
     @ApiOperation(value = "修改书籍", notes = "修改一本书", produces = MediaType.APPLICATION_JSON_VALUE)
     public Response putBookStore(@RequestBody @Validated BookStore bookStore) {
         bookStore.setBookPym(PinyinUtil.getFirstLetter(bookStore.getBookName(), "").toLowerCase());
-        boolean updata = bookStoreService.updateBookStoreByIsbnAndXqid(bookStore);
+        boolean updata = bookStoreService.updateById(bookStore);
         return updata ? new DataResponseResult(bookStore) : ResponseResult.FAIL();
     }
 

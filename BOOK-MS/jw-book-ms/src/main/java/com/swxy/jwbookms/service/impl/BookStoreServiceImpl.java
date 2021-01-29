@@ -25,15 +25,6 @@ public class BookStoreServiceImpl extends ServiceImpl<BookStoreMapper, BookStore
     private final BookStoreMapper bookStoreMapper;
 
     @Override
-    public boolean updateBookStoreByIsbnAndXqid(BookStore bookStore) {
-        boolean update = new LambdaUpdateChainWrapper<>(bookStoreMapper)
-                .eq(BookStore::getIsbn, bookStore.getIsbn())
-                .eq(BookStore::getXqid, bookStore.getXqid())
-                .update(bookStore);
-        return update;
-    }
-
-    @Override
     public Page queryBookStoreByPage(Page page, String xqid, String query) {
         LambdaQueryWrapper<BookStore> where = new LambdaQueryWrapper<BookStore>()
                 .eq(BookStore::getXqid, xqid)

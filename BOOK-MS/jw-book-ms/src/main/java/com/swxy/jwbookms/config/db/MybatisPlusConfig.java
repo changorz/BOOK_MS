@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
 
-//Spring boot方式
 @Configuration
 @MapperScan("com.swxy.jwbookms.mapper")
 public class MybatisPlusConfig implements MetaObjectHandler {

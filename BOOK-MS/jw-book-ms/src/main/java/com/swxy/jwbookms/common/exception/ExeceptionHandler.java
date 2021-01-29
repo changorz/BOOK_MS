@@ -5,9 +5,9 @@ import com.google.common.collect.ImmutableMap;
 import com.swxy.jwbookms.common.response.ResponseResult;
 import com.swxy.jwbookms.common.response.code.CommonCode;
 import com.swxy.jwbookms.common.response.code.ResultCode;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-import java.io.IOError;
 import java.io.IOException;
 
 @RestControllerAdvice
@@ -54,7 +53,8 @@ public class ExeceptionHandler {
     @ResponseBody
     public ResponseResult exception(Exception exception) {
         // 记录日志
-        LOGGER.error("catch exception:{}", exception.getMessage());
+        LOGGER.error("捕获异常:{}", exception.getMessage());
+        exception.printStackTrace();
         if (EXCEPTIONS == null) {
             //EXCEPTIONS构建成功
             EXCEPTIONS = builder.build();
@@ -75,7 +75,7 @@ public class ExeceptionHandler {
         builder.put(MaxUploadSizeExceededException.class, CommonCode.FILE_SIZE_LIMIT_10M);
         builder.put(ExcelCommonException.class, CommonCode.Excel_Common_Exception);
         builder.put(HttpRequestMethodNotSupportedException.class, CommonCode.HttpRequest_Method_Not_Supported_Exception);
-
+        builder.put(DuplicateKeyException.class, CommonCode.DuplicateKeyException);
 
         builder.put(IOException.class, CommonCode.FILE_IO_Exception);
     }
