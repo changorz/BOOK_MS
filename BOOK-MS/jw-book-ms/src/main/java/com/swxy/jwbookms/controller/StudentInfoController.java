@@ -57,10 +57,16 @@ public class StudentInfoController {
         return remove ? ResponseResult.SUCCESS() : ResponseResult.FAIL();
     }
 
-    @PutMapping("/StudentInfo/{uuid}")
+    @DeleteMapping("/StudentInfo/all/{xqid}")
+    @ApiOperation(value = "按学期删除全部学生")
+    public Response deleteStudentInfoAll(@PathVariable String xqid) {
+        boolean remove = studentInfoService.remove(new LambdaQueryWrapper<StudentInfo>().eq(StudentInfo::getXqid, xqid));
+        return remove ? ResponseResult.SUCCESS() : ResponseResult.FAIL();
+    }
+
+    @PutMapping("/StudentInfo")
     @ApiOperation(value = "修改学生")
-    public Response putStudentInfo(@RequestBody @Validated StudentInfo studentInfo, @PathVariable String uuid) {
-        studentInfo.setUuid(uuid);
+    public Response putStudentInfo(@RequestBody @Validated StudentInfo studentInfo) {
         boolean update = studentInfoService.updateById(studentInfo);
         return update ? new DataResponseResult(studentInfo) : ResponseResult.FAIL();
     }
@@ -102,6 +108,41 @@ public class StudentInfoController {
             put("count", listener.getCount());
         }}, CommonCode.SUCCESS);
     }
+
+    /**
+     * 分页查询（须选定学期）
+     * @param xqid 学期ID
+     * @return
+     */
+    @GetMapping("/StudentInfo/findStudentInfo/{xqid}/{current}/{size}")
+    @ApiOperation(value = "按姓名或者学号，分页查询（须选定学期）")
+    public Response findStudentInfo(
+            @PathVariable String xqid,
+            Page page
+    ) {
+        studentInfoService.page(page, new LambdaQueryWrapper<StudentInfo>().eq(StudentInfo::getXqid, xqid));
+        return new DataResponseResult<Page>(page);
+    }
+
+    /**
+     * 按姓名或者学号，分页查询（须选定学期）
+     *
+     * @param xqid 学期ID
+     * @param str  查询条件
+     * @return
+     */
+    @GetMapping("/StudentInfo/findStudentInfoByXhOrName/{xqid}/{current}/{size}/{str}")
+    @ApiOperation(value = "按姓名或者学号，分页查询（须选定学期）")
+    public Response findStudentInfoByXhOrName(
+            @PathVariable String xqid,
+            @PathVariable String str,
+            Page page
+    ) {
+        studentInfoService.queryStudentInfo(page, xqid, str);
+        return new DataResponseResult<Page>(page);
+    }
+
+
 
 }
 

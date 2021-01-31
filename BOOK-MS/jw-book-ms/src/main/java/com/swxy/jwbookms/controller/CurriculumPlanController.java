@@ -2,9 +2,11 @@ package com.swxy.jwbookms.controller;
 
 
 import com.alibaba.excel.EasyExcel;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.swxy.jwbookms.common.response.Response;
 import com.swxy.jwbookms.common.response.ResponseResult;
+import com.swxy.jwbookms.common.response.ResponseUtil;
 import com.swxy.jwbookms.common.response.code.CommonCode;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.listener.excel.CommonListener;
@@ -54,6 +56,12 @@ public class CurriculumPlanController {
     public Response deleteCurriculumPlan(@PathVariable String uuid) {
         boolean remove = curriculumPlanService.removeById(uuid);
         return remove ? ResponseResult.SUCCESS() : ResponseResult.FAIL();
+    }
+    @DeleteMapping("/CurriculumPlanAll/{xqid}")
+    @ApiOperation(value = "删除学期全部开课计划")
+    public Response deleteCurriculumAllPlan(@PathVariable String xqid) {
+        boolean remove = curriculumPlanService.remove(new LambdaQueryWrapper<CurriculumPlan>().eq(CurriculumPlan::getXqid, xqid));
+        return ResponseUtil.toResult(remove);
     }
 
     @PutMapping("/CurriculumPlan")

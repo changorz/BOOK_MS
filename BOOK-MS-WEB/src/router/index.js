@@ -31,58 +31,37 @@ Vue.use(Router)
  */
 export const constantRoutes = [
   { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-  { path: '/404', component: () => import('@/views/404'), hidden: true },
+  // { path: '/404', component: () => import('@/views/404'),
+  { path: '', component: Layout, children: [{ path: '/404', component: () => import('@/views/404'), hidden: true }] },
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
     children: [
-      {
-        path: 'dashboard',
-        name: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        meta: { title: 'dashboard', icon: 'dashboard' }
-      }
+      { path: 'dashboard', name: 'dashboard', component: () => import('@/views/dashboard/index'), meta: { title: 'dashboard', icon: 'dashboard' }}
     ]
   },
   {
     path: '/example',
     component: Layout,
-    redirect: '/example/table',
+    redirect: '/example/0',
     name: 'Example',
-    meta: { title: '填报表管理', icon: 'el-icon-s-help' },
+    meta: { title: '填报表', icon: 'el-icon-s-help' },
     children: [
-      {
-        path: 'BookStore',
-        name: 'BookStore',
-        component: () => import('@/views/table/BookStore'),
-        meta: { title: '书籍库管理', icon: 'table' }
-      },
-      {
-        path: 'StudentInfo',
-        name: 'StudentInfo',
-        component: () => import('@/views/table/StudentInfo'),
-        meta: { title: '学生信息管理', icon: 'table' }
-      },
-      {
-        path: 'CurriculumPlan',
-        name: 'CurriculumPlan',
-        component: () => import('@/views/table/CurriculumPlan'),
-        meta: { title: '开课计划管理', icon: 'table' }
-      }
+      { path: 'BookStore', name: 'BookStore', component: () => import('@/views/table/BookStore'), meta: { title: '书籍库管理', icon: 'BookStore' }},
+      { path: 'StudentInfo', name: 'StudentInfo', component: () => import('@/views/table/StudentInfo'), meta: { title: '学生信息管理', icon: 'StudentInfo' }},
+      { path: 'CurriculumPlan', name: 'CurriculumPlan', component: () => import('@/views/table/CurriculumPlan'), meta: { title: '开课计划管理', icon: 'CurriculumPlan' }}
     ]
   },
   {
-    path: '/form',
+    path: '/selectorManage',
     component: Layout,
+    redirect: '/selectorManage/1',
+    meta: { title: '公共资源', icon: 'el-icon-s-help' },
     children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: '表单', icon: 'form' }
-      }
-    ]
+      { path: 'XqidManage', name: 'XqidManage', component: () => import('@/views/common/XqidManage'), meta: { title: '学期管理', icon: 'form' }},
+      { path: 'SelectorManage', name: 'SelectorManage', component: () => import('@/views/common/SelectorManage'), meta: { title: '选择列表', icon: 'form' }}
+    ],
   },
 
   // 404 page must be placed at the end !!!
@@ -97,7 +76,6 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

@@ -18,7 +18,6 @@ import java.util.Set;
 
 /**
  * 公共资源获取类
- *
  * @author chang
  */
 

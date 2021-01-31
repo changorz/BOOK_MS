@@ -79,7 +79,7 @@ public class StudentInfo implements Serializable {
 
     @ExcelProperty("学期ID")
     @NotBlank(message = "xqid: 参数不能为空。")
-    @Pattern(regexp = "20[0-9]{2}-20[0-9]{2}-[0-9]]", message = "xqid: 参数错误。 示例: 2020-2021-1")
+    @Pattern(regexp = "20[0-9]{2}-20[0-9]{2}-[0-9]", message = "xqid: 参数错误。 示例: 2020-2021-1")
     @ApiModelProperty(value = "学期ID", required = true)
     private String xqid;
 

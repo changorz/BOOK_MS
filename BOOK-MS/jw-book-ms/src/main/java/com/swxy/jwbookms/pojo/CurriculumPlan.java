@@ -39,7 +39,7 @@ public class CurriculumPlan implements Serializable {
 
     @ExcelProperty("二级学院")
     @Length(max = 20, message = "twoLevelCollege: 参数长度不能大于20。 示例：信息与工程学院")
-    @ApiModelProperty(value = "二级学院", required = true)
+    @ApiModelProperty(value = "二级学院")
     private String twoLevelCollege;
 
     @ExcelProperty("专业")
@@ -61,7 +61,7 @@ public class CurriculumPlan implements Serializable {
 
     @ExcelProperty("学期ID")
     @NotBlank(message = "xqid: 参数不能为空。")
-    @Pattern(regexp = "20[0-9]{2}-20[0-9]{2}-[0-9]]", message = "xqid: 参数错误。 示例: 2020-2021-1")
+    @Pattern(regexp = "20[0-9]{2}-20[0-9]{2}-[0-9]", message = "xqid: 参数错误。 示例: 2020-2021-1")
     @ApiModelProperty(value = "学期ID", required = true)
     private String xqid;
 

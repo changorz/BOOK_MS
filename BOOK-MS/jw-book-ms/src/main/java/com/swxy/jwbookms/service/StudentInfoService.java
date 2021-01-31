@@ -14,4 +14,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface StudentInfoService extends IService<StudentInfo> {
 
+    /**
+     * 分页查询学生信息
+     * @param page 分页参数
+     * @param xqid 学期ID
+     * @param str 查询参数（学号，或者姓名）
+     * @return
+     */
+    Page queryStudentInfo(Page page, String xqid, String str);
+
 }

@@ -5,8 +5,6 @@ import cn.hutool.extra.pinyin.PinyinUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.util.StringUtils;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.swxy.jwbookms.pojo.BookStore;
@@ -44,8 +42,6 @@ public class CommonListener<T> extends AnalysisEventListener<T> {
     public CommonListener(IService service, String xqid) {
         this.service = service;
         this.xqid = xqid;
-        List<String> list = service.listObjs(new QueryWrapper<String>().select("isbn").eq("xqid", xqid));
-        xqidSet = list.stream().collect(Collectors.toSet());
     }
 
     /**
@@ -67,6 +63,10 @@ public class CommonListener<T> extends AnalysisEventListener<T> {
     public void invoke(T oneData, AnalysisContext context) {
         // 如果是书库表
         if (oneData instanceof BookStore) {
+            if (xqidSet == null || xqidSet.size() == 0){
+                List<String> list = service.listObjs(new QueryWrapper<String>().select("isbn").eq("xqid", xqid));
+                xqidSet = list.stream().collect(Collectors.toSet());
+            }
             BookStore bookStore = (BookStore) oneData;
             // 处理拼音码
             if (StringUtils.isEmpty(bookStore.getBookName())) {

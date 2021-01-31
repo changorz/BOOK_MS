@@ -1,7 +1,13 @@
 <template>
   <div class="login-container">
-    <el-form :model="loginForm" :rules="loginRules" auto-complete="on" class="login-form" label-position="left"
-             ref="loginForm">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      auto-complete="on"
+      class="login-form"
+      label-position="left"
+    >
 
       <div class="title-container">
         <h3 class="title">登录</h3>
@@ -9,46 +15,50 @@
 
       <el-form-item prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="user"/>
+          <svg-icon icon-class="user" />
         </span>
         <el-input
+          ref="username"
+          v-model="loginForm.username"
           auto-complete="on"
           name="username"
           placeholder="Username"
-          ref="username"
           tabindex="1"
           type="text"
-          v-model="loginForm.username"
         />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password"/>
+          <svg-icon icon-class="password" />
         </span>
         <el-input
           :key="passwordType"
+          ref="password"
           :type="passwordType"
-          @keyup.enter.native="handleLogin"
+          v-model="loginForm.pwd"
           auto-complete="on"
           name="password"
           placeholder="Password"
-          ref="password"
           tabindex="2"
-          v-model="loginForm.pwd"
+          @keyup.enter.native="handleLogin"
         />
-        <span @click="showPwd" class="show-pwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
+        <span class="show-pwd" @click="showPwd">
+          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" @click.native.prevent="handleLogin" style="width:100%;margin-bottom:30px;"
-                 type="primary">Login
+      <el-button
+        :loading="loading"
+        style="width:100%;margin-bottom:30px;"
+        type="primary"
+        @click.native.prevent="handleLogin"
+      >登录
       </el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+<!--        <span style="margin-right:20px;">username: admin</span>-->
+<!--        <span> password: 123456</span>-->
       </div>
 
     </el-form>
@@ -56,76 +66,76 @@
 </template>
 
 <script>
-  import { validUsername } from '@/utils/validate'
+import { validUsername } from '@/utils/validate'
 
-  export default {
-    name: 'Login',
-    data() {
-      const validateUsername = (rule, value, callback) => {
-        if (!validUsername(value)) {
-          callback(new Error('请输入正确的用户名'))
-        } else {
-          callback()
-        }
-      }
-      const validatePassword = (rule, value, callback) => {
-        if (value.length < 6) {
-          callback(new Error('密码不能少于6位数字'))
-        } else {
-          callback()
-        }
-      }
-      return {
-        loginForm: {
-          username: 'admin',
-          pwd: '123456'
-        },
-        loginRules: {
-          username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-          pwd: [{ required: true, trigger: 'blur', validator: validatePassword }]
-        },
-        loading: false,
-        passwordType: 'password',
-        redirect: undefined
-      }
-    },
-    watch: {
-      $route: {
-        handler: function(route) {
-          this.redirect = route.query && route.query.redirect
-        },
-        immediate: true
-      }
-    },
-    methods: {
-      showPwd() {
-        if (this.passwordType === 'password') {
-          this.passwordType = ''
-        } else {
-          this.passwordType = 'password'
-        }
-        this.$nextTick(() => {
-          this.$refs.password.focus()
-        })
-      },
-      handleLogin() {
-        this.$refs.loginForm.validate(valid => {
-          if (valid) {
-            this.loading = true
-            this.$store.dispatch('user/login', this.loginForm).then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
-            }).catch(() => {
-              this.loading = false
-            })
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
+export default {
+  name: 'Login',
+  data() {
+    const validateUsername = (rule, value, callback) => {
+      if (!validUsername(value)) {
+        callback(new Error('请输入正确的用户名'))
+      } else {
+        callback()
       }
     }
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('密码不能少于6位数字'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      loginForm: {
+        username: 'admin',
+        pwd: '123456'
+      },
+      loginRules: {
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        pwd: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      },
+      loading: false,
+      passwordType: 'password',
+      redirect: undefined
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
+      },
+      immediate: true
+    }
+  },
+  methods: {
+    showPwd() {
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
+      } else {
+        this.passwordType = 'password'
+      }
+      this.$nextTick(() => {
+        this.$refs.password.focus()
+      })
+    },
+    handleLogin() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
+            this.$router.push({ path: this.redirect || '/' })
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    }
   }
+}
 </script>
 
 <style lang="scss">

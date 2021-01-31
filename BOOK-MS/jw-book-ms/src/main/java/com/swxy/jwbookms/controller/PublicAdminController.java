@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 /**
  * 公共资源管理类
- *
  * @author chang
  */
 
@@ -45,10 +44,10 @@ public class PublicAdminController {
     private Set<String> selectorSet = new HashSet();
 
     @PostConstruct
-    public void init() {
+    public void init(){
         // 初始化下拉列表的set集合
         // 出版社补充管理
-        selectorSet.add("publishingHouseHupplements");
+        selectorSet.add("publishingHouseSupplements");
         // 专业名称管理
         selectorSet.add("majors");
         // 二级学院管理
@@ -107,9 +106,9 @@ public class PublicAdminController {
     // ======================================= 下拉列表管理 =========================================
     @ApiOperation("下拉列表管理:增加一条数据")
     @PostMapping("/Selector/{redisKey}/{str}")
-    public Response addSelector(@PathVariable String redisKey, @PathVariable String str) {
+    public Response addSelector(@PathVariable String redisKey, @PathVariable String str){
         // key 校验
-        if (!selectorSet.contains(redisKey)) {
+        if (!selectorSet.contains(redisKey)){
             ExceptionCast.cast(CommonCode.INVALID_PARAM);
         }
         // 开始操作
@@ -119,9 +118,9 @@ public class PublicAdminController {
 
     @ApiOperation("下拉列表管理:删除一条数据")
     @DeleteMapping("/Selector/{redisKey}/{str}")
-    public Response deleteSelector(@PathVariable String redisKey, @PathVariable String str) {
+    public Response deleteSelector(@PathVariable String redisKey, @PathVariable String str){
         // key 校验
-        if (!selectorSet.contains(redisKey)) {
+        if (!selectorSet.contains(redisKey)){
             ExceptionCast.cast(CommonCode.INVALID_PARAM);
         }
         // 开始操作

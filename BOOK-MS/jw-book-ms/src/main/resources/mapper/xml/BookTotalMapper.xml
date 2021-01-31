@@ -3,9 +3,9 @@
 <mapper namespace="com.swxy.jwbookms.mapper.BookTotalMapper">
 
     <update id="insertBookTotalByCurriclumPlan" parameterType="string">
+        -- 链接查询，专业和年级相同，按班级分类排序，按学期ID筛选
         INSERT
-        INTO book_total(uuid, two_level_college, major, grade, course_title, xqid, create_time, update_time, cla,
-                        submit_state)
+        INTO book_total(uuid, two_level_college, major, grade, course_title, xqid, create_time, cla, submit_state)
         select replace(md5(uuid()), "-", "") as uuid,
                c.two_level_college           as two_level_college,
                c.major                       as major,
@@ -13,7 +13,6 @@
                c.course_title                as course_title,
                c.xqid                        as xqid,
                now()                         as create_time,
-               now()                         as update_time,
                s.cla                         as cal,
                "0"                           as submit_state
         from curriculum_plan c
