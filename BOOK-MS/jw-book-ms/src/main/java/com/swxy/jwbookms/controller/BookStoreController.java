@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -70,6 +71,9 @@ public class BookStoreController {
     @ApiOperation(value = "修改书籍", notes = "修改一本书", produces = MediaType.APPLICATION_JSON_VALUE)
     public Response putBookStore(@RequestBody @Validated BookStore bookStore) {
         bookStore.setBookPym(PinyinUtil.getFirstLetter(bookStore.getBookName(), "").toLowerCase());
+        if(StringUtils.isEmpty(bookStore.getPublishingHouseSupplement())){
+            bookStore.setPublishingHouseSupplement("");
+        }
         boolean updata = bookStoreService.updateById(bookStore);
         return updata ? new DataResponseResult(bookStore) : ResponseResult.FAIL();
     }

@@ -24,7 +24,7 @@ public enum CommonCode implements ResultCode {
     JSR_303(false, 30300, ""),
     // 找不到 4
     HttpRequest_Method_Not_Supported_Exception(false, 40001, "HttpRequest方法不支持异常"),
-    DuplicateKeyException(false, 40002, "批量操作错误，为按要求数据或与数据库中数据产生冲突。"),
+    DuplicateKeyException(false, 40002, "操作错误，与数据库中数据产生冲突。"),
     // 错误 5
     FILE_DOWNLOAD_ERR(false, 50001, "文件下载"),
     FILE_SIZE_LIMIT_10M(false, 50002, "上传失败，文件最大为10M"),
