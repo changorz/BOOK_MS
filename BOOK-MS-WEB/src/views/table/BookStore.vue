@@ -77,11 +77,7 @@
           <el-col :span="12">
             <FormItem label="出版社补充">
               <Select v-model="currentData.publishingHouseSupplement" style="width:200px">
-                <Option value="集团自编">集团自编</Option>
-                <Option value="其他类">其他类</Option>
-                <Option value="英语类">英语类</Option>
-                <Option value="两课类">两课类</Option>
-                <Option value="马工程">马工程</Option>
+                <Option :key="ind" :value=val v-for="(val, ind) in publishingHouseSupplements">{{val}}</Option>
                 <Option value="">空</Option>
               </Select>
             </FormItem>
@@ -139,11 +135,7 @@
           <el-col :span="12">
             <FormItem label="出版社补充">
               <Select v-model="addData.publishingHouseSupplement" style="width:200px">
-                <Option value="集团自编">集团自编</Option>
-                <Option value="其他类">其他类</Option>
-                <Option value="英语类">英语类</Option>
-                <Option value="两课类">两课类</Option>
-                <Option value="马工程">马工程</Option>
+                <Option :key="ind" :value=val v-for="(val, ind) in publishingHouseSupplements">{{val}}</Option>
                 <Option value="">空</Option>
               </Select>
             </FormItem>
@@ -208,18 +200,19 @@
 </template>
 
 <script>
-import {
-  addBookStore,
-  deleteBookStore,
-  deleteBookStoreAllByXqid,
-  getBookStoreList,
-  getPublishingHouse,
-  importBookStoreByExcel,
-  putBookStore
-} from '@/api/table'
-import { clearObject } from '@/utils/bmsUtil'
+  import {
+    addBookStore,
+    deleteBookStore,
+    deleteBookStoreAllByXqid,
+    getBookStoreList,
+    getPublishingHouse,
+    importBookStoreByExcel,
+    putBookStore
+  } from '@/api/table'
+  import { clearObject } from '@/utils/bmsUtil'
+  import { getSelectorList } from '@/api/common'
 
-export default {
+  export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -356,12 +349,17 @@ export default {
         total: 1
       },
       pageOpts: [10, 20, 50, 100],
-      publishingHouseList: []
+      publishingHouseList: [],
+      publishingHouseSupplements: []
     }
   },
   created() {
     this.fetchData()
+    // 初始化下拉列表
     this.getPublishingHouse()
+    getSelectorList('publishingHouseSupplements').then(res => {
+      this.publishingHouseSupplements = res.data
+    })
   },
   methods: {
     handleUpload(file) {
