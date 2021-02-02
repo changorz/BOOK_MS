@@ -27,3 +27,31 @@ export function deleteSelector(type, value) {
   })
 }
 
+// 设置活跃学期
+export function setActiveXq(xq) {
+  const url = `/admin/public/setActiveXq/${xq}`
+  return request({
+    url: url,
+    method: 'put'
+  })
+}
+
+// /admin/public/addXq
+// 增加一个新学期
+export function addXq(xq) {
+  const url = `/admin/public/addXq/${xq}`
+  return request({
+    url: url,
+    method: 'post'
+  })
+}
+
+// 删除学期
+export function deleteXq(xq) {
+  const url = `/admin/public/deleteXq/${xq}`
+  return request({
+    url: url,
+    method: 'delete'
+  })
+}
+

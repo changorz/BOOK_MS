@@ -1,6 +1,19 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
+    <dvi>
+      <Steps :current="1" status="wait">
+        <Step content="创建当前学期" title="起始"></Step>
+        <Step content="导入excel1" title="导入Excel"></Step>
+        <Step content="导入excel2" title="导入Excel"></Step>// 开课计划一定不能错
+        <Step content="导入excel3" title="导入Excel"></Step>
+        <Step content="开启填报，让老师填写" title="填报1"></Step>
+        <Step content="填报停止，可以导出excel。。。" title="导出数据"></Step>
+        <Step content="缺书填报" title="填报2"></Step>
+        <Step content="打回通知" title="填报3"></Step>
+        <Step content="存档" title="结束"></Step>
+      </Steps>
+    </dvi>
   </div>
 </template>
 

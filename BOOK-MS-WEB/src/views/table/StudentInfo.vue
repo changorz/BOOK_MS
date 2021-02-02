@@ -72,7 +72,9 @@
           </el-col>
           <el-col :span="12">
             <FormItem label="上课院系" required>
-              <Input v-model="currentData.faculty" />
+              <Select style="width:200px" v-model="currentData.faculty">
+                <Option :key="ind" :value=val v-for="(val, ind) in facultys">{{val}}</Option>
+              </Select>
             </FormItem>
           </el-col>
         </el-row>
@@ -130,7 +132,9 @@
           </el-col>
           <el-col :span="12">
             <FormItem label="上课院系" required>
-              <Input v-model="addData.faculty" />
+              <Select style="width:200px" v-model="currentData.faculty">
+                <Option :key="ind" :value=val v-for="(val, ind) in facultys">{{val}}</Option>
+              </Select>
             </FormItem>
           </el-col>
         </el-row>
@@ -197,17 +201,18 @@
 </template>
 
 <script>
-import {
-  addStudentInfo,
-  deleteStudentInfo,
-  deleteStudentInfoAll,
-  getStudentInfoList,
-  importStudentInfoByExcel,
-  putStudentInfo
-} from '@/api/table'
-import { clearObject } from '@/utils/bmsUtil'
+  import {
+    addStudentInfo,
+    deleteStudentInfo,
+    deleteStudentInfoAll,
+    getStudentInfoList,
+    importStudentInfoByExcel,
+    putStudentInfo
+  } from '@/api/table'
+  import { clearObject } from '@/utils/bmsUtil'
+  import { getSelectorList } from '@/api/common'
 
-export default {
+  export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -315,11 +320,17 @@ export default {
         size: 10,
         total: 1
       },
-      pageOpts: [10, 20, 50, 100]
+      pageOpts: [10, 20, 50, 100],
+      // 上课系院
+      facultys: []
     }
   },
   created() {
     this.fetchData()
+    // 初始化下拉列表
+    getSelectorList('twoLevelColleges').then(res => {
+      this.facultys = res.data
+    })
   },
   methods: {
     handleUpload(file) {

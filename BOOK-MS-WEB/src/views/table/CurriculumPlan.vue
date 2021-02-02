@@ -4,7 +4,7 @@
       <label style="font-size: 25px;">{{ this.$route.meta.title }}</label>
     </div>
     <div class="input_top">
-      <!--   TODO 按班级分类 什么的   -->
+      <!--   TODO 按班级分类查询 什么的   -->
       <Input v-model="search" placeholder="搜索书籍" style="width: auto;" @keyup.enter.native="onSearch" />
       <Button type="info" @click="onSearch">搜索</Button>
       <div style="float: right; margin-right: 20px">
@@ -158,17 +158,17 @@
 </template>
 
 <script>
-import {
-  addCurriculumPlan,
-  deleteCurriculumPlan,
-  deleteCurriculumPlanByXqid,
-  getCurriculumPlanList,
-  importCurriculumPlanByExcel,
-  putCurriculumPlan
-} from '@/api/table'
-import { clearObject } from '@/utils/bmsUtil'
+  import {
+    addCurriculumPlan,
+    deleteCurriculumPlan,
+    deleteCurriculumPlanByXqid,
+    getCurriculumPlanList,
+    importCurriculumPlanByExcel,
+    putCurriculumPlan
+  } from '@/api/table'
+  import { clearObject } from '@/utils/bmsUtil'
 
-export default {
+  export default {
   filters: {
     statusFilter(status) {
       const statusMap = {

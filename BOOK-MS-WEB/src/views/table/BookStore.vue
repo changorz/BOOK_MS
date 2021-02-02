@@ -39,7 +39,7 @@
       title="修改"
       width="720"
     >
-      <Form :label-width="100" :model="currentData" label-position="right"  label-colon=":">
+      <Form :label-width="100" :model="currentData" label-colon=":" label-position="right">
         <el-row>
           <el-col :span="12">
             <FormItem label="ISBN" required>
@@ -77,7 +77,7 @@
           <el-col :span="12">
             <FormItem label="出版社补充">
               <Select v-model="currentData.publishingHouseSupplement" style="width:200px">
-                <Option :key="ind" :value=val v-for="(val, ind) in publishingHouseSupplements">{{val}}</Option>
+                <Option :key="ind" :value="val" v-for="(val, ind) in publishingHouseSupplements">{{ val }}</Option>
                 <Option value="">空</Option>
               </Select>
             </FormItem>
@@ -135,7 +135,7 @@
           <el-col :span="12">
             <FormItem label="出版社补充">
               <Select v-model="addData.publishingHouseSupplement" style="width:200px">
-                <Option :key="ind" :value=val v-for="(val, ind) in publishingHouseSupplements">{{val}}</Option>
+                <Option :key="ind" :value="val" v-for="(val, ind) in publishingHouseSupplements">{{ val }}</Option>
                 <Option value="">空</Option>
               </Select>
             </FormItem>
@@ -377,13 +377,10 @@
       // 将得到的文件流添加到FormData对象
       param.append('file', this.file, this.file.name)
       await importBookStoreByExcel(param).then(res => {
-        this.uploadLoading = false
         this.uploadModal = false
         this.$Message.success('成功添加' + res.data.count + '条数据')
-        // eslint-disable-next-line handle-callback-err
-      }).catch(err => {
-        this.uploadLoading = false
       })
+      this.uploadLoading = false
       // 更新成功或刷新表格数据
       await this.fetchData()
     },
