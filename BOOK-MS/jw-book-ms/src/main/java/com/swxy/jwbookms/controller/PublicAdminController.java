@@ -56,12 +56,12 @@ public class PublicAdminController {
 
     // ======================================= 学期管理 =========================================
     @ApiOperation("增加一个新学期")
-    @PostMapping("/addXq")
-    public Response addXq(String xqid) {
+    @PostMapping("/addXq/{xqid}")
+    public Response addXq(@PathVariable String xqid) {
         AssertUtil.isXqid(xqid);
         String xqidValue = BMSUtil.xqidToZh(xqid);
         redisUtil.sSet(RedisKey.XQID_LIST.getValue(), xqid);
-        redisUtil.set(RedisKey.ACTIVE_XQID.getValue(), xqid);
+        // redisUtil.set(RedisKey.ACTIVE_XQID.getValue(), xqid);
         // 提交成功返回完整的学期信息
         return new DataResponseResult<XqidBean>(commonService.getXqInfo());
     }
@@ -112,7 +112,7 @@ public class PublicAdminController {
             ExceptionCast.cast(CommonCode.INVALID_PARAM);
         }
         // 开始操作
-        long l = redisUtil.sSet(redisKey, str);
+        long l = redisUtil.sSet(redisKey, str.trim());
         return ResponseUtil.toResult(l > 0);
     }
 
@@ -124,7 +124,7 @@ public class PublicAdminController {
             ExceptionCast.cast(CommonCode.INVALID_PARAM);
         }
         // 开始操作
-        long l = redisUtil.setRemove(redisKey, str);
+        long l = redisUtil.setRemove(redisKey, str.trim());
         return ResponseUtil.toResult(l > 0);
     }
 

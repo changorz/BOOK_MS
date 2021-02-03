@@ -38,15 +38,15 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/dashboard',
     children: [
-      { path: 'dashboard', name: 'dashboard', component: () => import('@/views/dashboard/index'), meta: { title: 'dashboard', icon: 'dashboard' }}
+      { path: 'dashboard', name: 'dashboard', component: () => import('@/views/dashboard/index'), meta: { title: 'dashboard', icon: 'home' }}
     ]
   },
   {
     path: '/example',
     component: Layout,
-    redirect: '/example/0',
+    redirect: '/example/BookStore',
     name: 'Example',
-    meta: { title: '填报表', icon: 'el-icon-s-help' },
+    meta: { title: '填报表', icon: 'table' },
     children: [
       { path: 'BookStore', name: 'BookStore', component: () => import('@/views/table/BookStore'), meta: { title: '书籍库管理', icon: 'BookStore' }},
       { path: 'StudentInfo', name: 'StudentInfo', component: () => import('@/views/table/StudentInfo'), meta: { title: '学生信息管理', icon: 'StudentInfo' }},
@@ -56,11 +56,11 @@ export const constantRoutes = [
   {
     path: '/selectorManage',
     component: Layout,
-    redirect: '/selectorManage/1',
-    meta: { title: '公共资源', icon: 'el-icon-s-help' },
+    redirect: '/selectorManage/XqidManage',
+    meta: { title: '公共资源', icon: 'ziyuan' },
     children: [
-      { path: 'XqidManage', name: 'XqidManage', component: () => import('@/views/common/XqidManage'), meta: { title: '学期管理', icon: 'form' }},
-      { path: 'SelectorManage', name: 'SelectorManage', component: () => import('@/views/common/SelectorManage'), meta: { title: '选择列表', icon: 'form' }}
+      { path: 'XqidManage', name: 'XqidManage', component: () => import('@/views/common/XqidManage'), meta: { title: '学期管理', icon: 'XqidManage' }},
+      { path: 'SelectorManage', name: 'SelectorManage', component: () => import('@/views/common/SelectorManage'), meta: { title: '选择列表', icon: 'SelectorManage' }}
     ],
   },
 

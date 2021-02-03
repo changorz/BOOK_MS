@@ -35,9 +35,14 @@ public class AssertUtil {
      */
     public static void isXqid(String xqid) {
         boolean match = ReUtil.isMatch("20[0-9]{2}-20[0-9]{2}-[1-2]", xqid);
-        if (StringUtils.isNotEmpty(xqid) && !match) {
+        if (!match) {
             ExceptionCast.cast(CommonCode.Parameter_Xqid_to_Err);
         }
+        int i = Integer.parseInt(xqid.substring(5, 9)) - Integer.parseInt(xqid.substring(0, 4));
+        if (i != 1){
+            ExceptionCast.cast(CommonCode.Parameter_Xqid_to_Err);
+        }
+
     }
 
 }

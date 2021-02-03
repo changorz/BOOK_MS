@@ -1,25 +1,25 @@
 <template>
-    <div  class="app-container">
-      <div style="width: 1000px;margin:0 auto;">
-        <label style="font-size: 25px;">{{ this.$route.meta.title }}</label>
-        <div style="width:100%; margin: 10px; float: right">
-          <div style="float: right; ">
-            <Button @click="handleRender">新建学期</Button>
-          </div>
-        </div>
-        <div style="margin: 5px;">
-          <Table :columns="xqidColumns" :data="xqidData" :loading="Tloading" border >
-            <template slot="name" slot-scope="{ row }">
-              <strong>{{ row.name }}</strong>
-            </template>
-            <template slot="action" slot-scope="{ row, index }">
-              <Button @click="active(index)" size="small" style="margin-right: 5px" type="primary">激活</Button>
-              <Button @click="remove(index)" size="small" type="error">删除</Button>
-            </template>
-          </Table>
+  <div class="app-container">
+    <div style="width: 1000px;margin:0 auto;">
+      <label style="font-size: 25px;">{{ this.$route.meta.title }}</label>
+      <div style="width:100%; margin: 10px; float: right">
+        <div style="float: right; ">
+          <Button @click="handleRender">新建学期</Button>
         </div>
       </div>
+      <div style="margin: 5px;">
+        <Table :columns="xqidColumns" :data="xqidData" :loading="Tloading" border>
+          <template slot="name" slot-scope="{ row }">
+            <strong>{{ row.name }}</strong>
+          </template>
+          <template slot="action" slot-scope="{ row, index }">
+            <Button @click="active(index)" size="small" style="margin-right: 5px" type="primary">激活</Button>
+            <Button @click="remove(index)" size="small" type="error">删除</Button>
+          </template>
+        </Table>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>

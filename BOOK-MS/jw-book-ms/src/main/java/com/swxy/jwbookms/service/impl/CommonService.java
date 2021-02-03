@@ -21,10 +21,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -77,7 +74,7 @@ public class CommonService {
             return null;
         }
         String xqidValue = BMSUtil.xqidToZh(xqid);
-        Set<String> strings = new HashSet<>();
+        Set<String> strings = new TreeSet<>();
         objects.forEach(e -> strings.add((String) e));
         XqidBean bean = new XqidBean(xqid, xqidValue, strings);
         return bean;

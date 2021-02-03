@@ -81,7 +81,10 @@
         <el-row>
           <el-col :span="12">
             <FormItem label="在校状态" required>
-              <Input v-model="currentData.status" />
+              <Select style="width:200px" v-model="currentData.status">
+                <Option value="在校">在校</Option>
+                <Option value="离校">离校</Option>
+              </Select>
             </FormItem>
           </el-col>
         </el-row>
@@ -141,7 +144,10 @@
         <el-row>
           <el-col :span="12">
             <FormItem label="在校状态" required>
-              <Input v-model="addData.status" />
+              <Select style="width:200px" v-model="addData.status">
+                <Option value="在校">在校</Option>
+                <Option value="离校">离校</Option>
+              </Select>
             </FormItem>
           </el-col>
         </el-row>
