@@ -66,9 +66,9 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+  import { validUsername } from '@/utils/validate'
 
-export default {
+  export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -154,6 +154,13 @@ export default {
 
   /* reset element-ui css */
   .login-container {
+    width: 100%;
+    height: 100%;
+    background-image: url("../../assets/bj/bj01.jpg");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
     .el-input {
       display: inline-block;
       height: 47px;
