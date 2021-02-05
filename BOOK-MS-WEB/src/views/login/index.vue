@@ -156,7 +156,7 @@
   .login-container {
     width: 100%;
     height: 100%;
-    background-image: url("../../assets/bj/bj01.jpg");
+    background-image: url("../../assets/bj/bj02.jpg");
     background-size: cover;
     background-position: center;
     position: relative;
