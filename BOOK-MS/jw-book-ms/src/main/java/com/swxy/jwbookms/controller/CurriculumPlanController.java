@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -99,6 +100,7 @@ public class CurriculumPlanController {
         return new DataResponseResult<Page>(page);
     }
 
+    @Transactional(rollbackFor=Exception.class)
     @PostMapping("/CurriculumPlan/{xqid}/improt/excel")
     @ApiOperation(value = "导入excel，必须字段（二级学院(选填)，专业，年级，课程名称，学期ID），表中不能存在公式！")
     public Response importCurriculumPlanFile(@RequestParam MultipartFile file, @PathVariable String xqid) throws IOException {

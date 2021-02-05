@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -88,6 +89,7 @@ public class BookStoreController {
         return new DataResponseResult(one, CommonCode.FIND_AC);
     }
 
+    @Transactional(rollbackFor=Exception.class)
     @PostMapping("/BookStore/{xqid}/improt/excel")
     @ApiOperation(value = "导入excel，必须字段（ISBN，书名，出版社全称，作者，定价，出版社补充（选填）: 集团自编/其他类/英语类/两课类/马工程），表中不能存在公式！")
     public Response importBookStoreFile(@RequestParam MultipartFile file, @PathVariable String xqid) throws IOException {

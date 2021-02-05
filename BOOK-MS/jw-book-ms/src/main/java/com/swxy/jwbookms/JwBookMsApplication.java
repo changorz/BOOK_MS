@@ -1,10 +1,7 @@
 package com.swxy.jwbookms;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication
 public class JwBookMsApplication {
@@ -14,3 +11,7 @@ public class JwBookMsApplication {
     }
 
 }
+
+/**
+ * spring-boot 会自动配置事务，相关的配置在 org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration
+ */
