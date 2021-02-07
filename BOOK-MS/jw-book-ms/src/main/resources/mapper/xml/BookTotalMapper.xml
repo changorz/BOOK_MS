@@ -3,7 +3,7 @@
 <mapper namespace="com.swxy.jwbookms.mapper.BookTotalMapper">
 
     <update id="insertBookTotalByCurriclumPlan" parameterType="string">
-        -- 链接查询，专业和年级相同，按班级分类排序，按学期ID筛选
+        <!-- 链接查询，专业和年级相同，按班级分类排序，按学期ID筛选 -->
         INSERT
         INTO book_total(uuid, two_level_college, major, grade, course_title, xqid, create_time, cla, submit_state)
         select replace(md5(uuid()), "-", "") as uuid,
@@ -27,5 +27,18 @@
         select count(1) as total, count(isbn) as yet
         from book_total
         where xqid = #{xqid}
+    </select>
+
+    <select id="queryBookTotalByMap" resultType="com.swxy.jwbookms.pojo.BookTotal">
+        select * from book_total
+        <where>
+            xqid = #{xqid}
+            <!-- 年级 -->
+            <if test="map.grade != null and map.grade != ''">AND grade = #{map.grade}</if>
+            <!-- 学院 -->
+            <if test="map.twoLevelCollege != null and map.twoLevelCollege != ''">AND two_level_college = #{map.twoLevelCollege}</if>
+            <!-- 专业 -->
+            <if test="map.major != null and map.major != ''">AND major = #{map.major}</if>
+        </where>
     </select>
 </mapper>

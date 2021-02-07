@@ -3,6 +3,7 @@ package com.swxy.jwbookms.controller;
 import com.swxy.jwbookms.common.response.Response;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.enums.RedisKey;
+import com.swxy.jwbookms.service.BookTotalService;
 import com.swxy.jwbookms.service.impl.CommonService;
 import com.swxy.jwbookms.util.RedisUtil;
 import io.swagger.annotations.Api;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -32,6 +35,8 @@ public class PublicController {
     private CommonService commonService;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private BookTotalService bookTotalService;
 
     // 获取学期信息：user
     @ApiOperation("获取学期信息")
@@ -46,5 +51,13 @@ public class PublicController {
         Set<Object> objects = redisUtil.sGet(str);
         return new DataResponseResult<>(objects);
     }
+
+    @ApiOperation("获取总表的所有选择值")
+    @GetMapping("/selects/allByBookTota/{xqid}")
+    public Response getSelectsAllByBookTota(@PathVariable String xqid) {
+        Map<String, List> selectAllByBookTotal = bookTotalService.getSelectAllByBookTotal(xqid);
+        return new DataResponseResult<>(selectAllByBookTotal);
+    }
+
 
 }

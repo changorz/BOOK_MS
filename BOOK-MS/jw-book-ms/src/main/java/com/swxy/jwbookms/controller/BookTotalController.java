@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -82,18 +83,46 @@ public class BookTotalController {
         return ResponseUtil.toResult(i > 0, successMsg, failMsg);
     }
 
-    @GetMapping({"/BookTotal/{xqid}/{current}/{size}"})
-    @ApiOperation(value = "按学期id分页查询 总表")
+    /**
+     * 按学期id分页查询 总表
+     * @param xqid
+     * @param page
+     * @param map  选择的查询条件，可以为空
+     * @return
+     */
+    @GetMapping({"/BookTotal/all/{xqid}/{current}/{size}"})
+    @ApiOperation(value = "按学期id分页查询 总表 map为过滤条件")
+    public Response queryBookTotalByXqid(
+            @PathVariable String xqid,
+            Page page,
+            @RequestParam Map<String, String> map
+    ) {
+        bookTotalService.queryBookTotalServiceByXqid(xqid, page, map);
+        return new DataResponseResult<Page>(page);
+    }
+
+    /**
+     * 按课程名模糊分页查询（须选定学期）
+     *
+     * @param xqid 学期ID
+     * @param str  查询条件
+     * @param map  选择的查询条件，可以为空
+     * @return
+     */
+    @GetMapping("/BookTotal/findBookTotalByTitle/{xqid}/{str}/{current}/{size}")
+    @ApiOperation(value = "按学期id和课程名称分页查询 总表 map为过滤条件")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "current", value = "起始也", required = false, paramType = "path"),
             @ApiImplicitParam(name = "size", value = "页大小", required = false, paramType = "path")
     })
-    public Response queryCurriculumPlanByXqid(
+    public Response queryBookTotalByMap(
             @PathVariable String xqid,
-            Page page
+            @PathVariable String str,
+            Page page,
+            @RequestBody Map map
     ) {
-        bookTotalService.querybookTotalServiceByXqid(xqid, page);
-        return new DataResponseResult<Page>(page);
+        System.out.println(map);
+        return  null;
     }
 
 

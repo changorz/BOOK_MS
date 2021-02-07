@@ -43,6 +43,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/v2/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/druid/**").permitAll()
                 .anyRequest().authenticated()   // 任何请求,登录后可以访问
                 .and()
                 .addFilterBefore(new JWTAuthorizationFilter(userDetailsService, authenticationManager(), rsaKeyProperties), LogoutFilter.class)
