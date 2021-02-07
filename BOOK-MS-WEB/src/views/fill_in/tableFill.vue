@@ -43,9 +43,9 @@
       :page-size="page.size"
       :page-size-opts="pageOpts"
       :total="page.total"
+      show-sizer
       @on-change="currentChange"
       @on-page-size-change="pageSizeChange"
-      show-sizer
     />
   </div>
 </template>

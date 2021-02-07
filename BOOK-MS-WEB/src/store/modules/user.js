@@ -60,9 +60,9 @@ const actions = {
         if (!data) {
           return reject('验证失败，请重新登录。')
         }
-        const { alias } = data
+        const { alias, img } = data
         commit('SET_NAME', alias)
-        commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+        commit('SET_AVATAR', img != null ? img : 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
         resolve(data)
       }).catch(error => {
         reject(error)
