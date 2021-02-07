@@ -4,112 +4,36 @@
       <label style="font-size: 25px;">{{ this.$route.meta.title }}</label>
     </div>
     <div class="input_top">
-      <!--   TODO 按班级分类查询 什么的   -->
-      <Input v-model="search" placeholder="搜索书籍" style="width: auto;" @keyup.enter.native="onSearch" />
-      <Button type="info" @click="onSearch">搜索</Button>
+      <Input @keyup.enter.native="onSearch" placeholder="搜索书籍" style="width: auto;" v-model="search" />
+      <Button @click="onSearch" type="info">搜索</Button>
       <div style="float: right; margin-right: 20px">
         <Button @click="uploadModal = true">excel上传</Button>
-        <Button type="success" @click="addDrawer = true">新增</Button>
-        <Button type="primary" @click="updataBut">修改</Button>
-        <Button type="warning" @click="deleteObj">删除</Button>
-        <Button type="error" @click="deleteXqAll = true">学期数据删除</Button>
+        <Button @click="addDrawer = true" type="success">新增</Button>
+        <Button @click="updataBut" type="primary">修改</Button>
+        <Button @click="deleteObj" type="warning">删除</Button>
+        <Button @click="deleteXqAll = true" type="error">学期数据删除</Button>
       </div>
     </div>
     <Table
       :columns="columns"
       :data="list"
       :loading="listLoading"
-      border
-      highlight-row
       @on-current-change="onCurrentChange"
-    />
+      highlight-row
+    >
+      <template slot="submitState" slot-scope="{ row }">
+        <el-tag :type="row.submitState | statusFilter">{{row.submitState | formatStata}}</el-tag>
+      </template>
+    </Table>
     <Page
       :current="page.current"
       :page-size="page.size"
       :page-size-opts="pageOpts"
       :total="page.total"
-      show-sizer
       @on-change="currentChange"
       @on-page-size-change="pageSizeChange"
+      show-sizer
     />
-    <!-- 抽屉代码 修改 -->
-    <Drawer
-      v-model="drawer"
-      :mask-closable="false"
-      :styles="styles"
-      title="修改"
-      width="720"
-    >
-      <Form :label-width="100" :model="currentData" label-colon=":" label-position="right">
-        <el-row>
-          <el-col :span="12">
-            <FormItem label="年级" required>
-              <Input v-model="currentData.grade" />
-            </FormItem>
-          </el-col>
-          <el-col :span="12">
-            <FormItem label="专业" required>
-              <Input v-model="currentData.major" />
-            </FormItem>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <FormItem label="二级学院">
-              <Input v-model="currentData.twoLevelCollege" />
-            </FormItem>
-          </el-col>
-          <el-col :span="12">
-            <FormItem label="课程名称" required>
-              <Input v-model="currentData.courseTitle" />
-            </FormItem>
-          </el-col>
-        </el-row>
-      </Form>
-      <div class="demo-drawer-footer">
-        <Button style="margin-right: 8px" @click="drawer = false">取消</Button>
-        <Button type="primary" @click="drawerCommit">提交</Button>
-      </div>
-    </Drawer>
-    <!-- 抽屉代码 添加 -->
-    <Drawer
-      v-model="addDrawer"
-      :mask-closable="false"
-      :styles="styles"
-      title="添加书籍"
-      width="720"
-    >
-      <Form :label-width="100" :model="addData" label-colon=":" label-position="right">
-        <el-row>
-          <el-col :span="12">
-            <FormItem label="年级" required>
-              <Input v-model="addData.grade" />
-            </FormItem>
-          </el-col>
-          <el-col :span="12">
-            <FormItem label="专业" required>
-              <Input v-model="addData.major" />
-            </FormItem>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <FormItem label="二级学院">
-              <Input v-model="addData.twoLevelCollege" />
-            </FormItem>
-          </el-col>
-          <el-col :span="12">
-            <FormItem label="课程名称" required>
-              <Input v-model="addData.courseTitle" />
-            </FormItem>
-          </el-col>
-        </el-row>
-      </Form>
-      <div class="demo-drawer-footer">
-        <Button style="margin-right: 8px" @click="addDrawer = false">取消</Button>
-        <Button type="primary" @click="addBook">确认添加</Button>
-      </div>
-    </Drawer>
     <Modal v-model="deleteXqAll" width="360">
       <p slot="header" style="color:#f60; text-align:center">
         <Icon type="ios-information-circle" />
@@ -120,25 +44,26 @@
         <p>是否继续删除？</p>
       </div>
       <div slot="footer">
-        <Button :loading="modal_loading" long size="large" type="error" @click="deleteAll">删除</Button>
+        <Button :loading="modal_loading" @click="deleteAll" long size="large" type="error">删除</Button>
       </div>
     </Modal>
     <Modal
-      v-model="uploadModal"
       :loading="uploadLoading"
       :styles="{top: '180px'}"
+      @on-ok="fileload"
       ok-text="上传"
       title="Excel导入"
-      @on-ok="fileload"
+      v-model="uploadModal"
     >
       <div>表中必要字段：
-        <el-link type="success">年级</el-link>,
-        <el-link type="success">专业</el-link>,
-        <el-link type="success">二级学院</el-link>,
-        <el-link type="success">课程名称</el-link>
+        <el-link type="success">ISBN</el-link>,
+        <el-link type="success">书名</el-link>,
+        <el-link type="success">出版社全称</el-link>,
+        <el-link type="success">作者</el-link>,
+        <el-link type="success">定价</el-link>
       </div>
       <div style="margin: 5px 0 10px 0px">表中选填字段：
-        <el-link type="warning">无</el-link>
+        <el-link type="warning">出版社补充</el-link>
       </div>
       <Upload
         :before-upload="handleUpload"
@@ -151,7 +76,7 @@
           <p>请选择正确的Excel文件</p>
         </div>
       </Upload>
-      <div v-if="file !== null" style="padding: 10px 0 0 10px">上传文件: <p style="color: deeppink; display: inline-block">
+      <div style="padding: 10px 0 0 10px" v-if="file !== null">上传文件: <p style="color: deeppink; display: inline-block">
         {{ file.name }}</p></div>
     </Modal>
   </div>
@@ -159,16 +84,39 @@
 
 <script>
   import {
-    addCurriculumPlan,
-    deleteCurriculumPlan,
-    deleteCurriculumPlanByXqid,
-    getCurriculumPlanList,
-    importCurriculumPlanByExcel,
-    putCurriculumPlan
+    addBookStore,
+    deleteBookStore,
+    deleteBookStoreAllByXqid,
+    getBookTotalList,
+    importBookStoreByExcel,
+    putBookStore
   } from '@/api/table'
   import { clearObject } from '@/utils/bmsUtil'
+  import expandRow from './table-expand.vue'
 
   export default {
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    expandRow
+  },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        0: 'info',
+        1: 'success',
+        2: 'danger'
+      }
+      return statusMap[status]
+    },
+    formatStata(status) {
+      const statusMap = {
+        0: '未填报',
+        1: '已填报',
+        2: '被打回'
+      }
+      return statusMap[status]
+    }
+  },
   data() {
     return {
       // 按学期删除
@@ -185,18 +133,64 @@
       addDrawer: false,
       search: '',
       addData: {
-        uuid: '',
+        author: null,
+        bookName: '',
+        bookType: '',
+        bookVersion: '',
+        bookYear: null,
+        cla: '',
+        courseTitle: '',
+        createTime: '',
         grade: '',
+        isbn: '',
+        lecturer: null,
         major: '',
+        pricing: 0,
+        publishingHouse: null,
+        publishingHouseSupplement: null,
+        remark: null,
+        staffRoom: '',
+        studentBookCount: null,
+        submitState: 0,
+        teacherBookCount: null,
+        tel: null,
+        totalBook: null,
+        totalPricing: null,
         twoLevelCollege: '',
-        courseTitle: ''
+        updateTime: null,
+        uuid: '',
+        writeId: null,
+        xqid: ''
       },
       currentData: {
-        uuid: '',
+        author: null,
+        bookName: '',
+        bookType: '',
+        bookVersion: '',
+        bookYear: null,
+        cla: '',
+        courseTitle: '',
+        createTime: '',
         grade: '',
+        isbn: '',
+        lecturer: null,
         major: '',
+        pricing: 0,
+        publishingHouse: null,
+        publishingHouseSupplement: null,
+        remark: null,
+        staffRoom: '',
+        studentBookCount: null,
+        submitState: 0,
+        teacherBookCount: null,
+        tel: null,
+        totalBook: null,
+        totalPricing: null,
         twoLevelCollege: '',
-        courseTitle: ''
+        updateTime: null,
+        uuid: '',
+        writeId: null,
+        xqid: ''
       },
       styles: {
         height: 'calc(100% - 55px)',
@@ -207,28 +201,69 @@
       list: [],
       columns: [
         {
-          title: '年级',
-          key: 'grade',
-          resizable: true,
-          width: 150,
-          align: 'center'
+          type: 'expand',
+          width: 50,
+          render: (h, params) => {
+            return h(expandRow, {
+              props: {
+                row: params.row
+              }
+            })
+          }
         },
         {
           title: '专业',
           key: 'major',
-          resizable: true,
           align: 'center'
         },
         {
-          title: '二级学院',
-          key: 'twoLevelCollege',
-          resizable: true,
+          title: '班级',
+          key: 'cla',
           align: 'center'
         },
         {
           title: '课程名称',
           key: 'courseTitle',
+          align: 'center'
+        },
+        {
+          title: '使用教材名称',
+          key: 'bookName',
+          width: 220,
+          align: 'center',
+          tooltip: (h, params) => {
+            const texts = params.row.bookName
+            return h('div', [
+              h('Tooltip', {
+                props: {
+                  placement: 'bottom',
+                  transfer: true
+                }
+              }, [texts, h('span', {
+                slot: 'content',
+                style: {
+                  whiteSpace: 'normal'
+                }
+              }, params.row.bookName)
+              ])
+            ])
+          }
+        },
+        {
+          title: '定价(元)',
+          key: 'pricing',
           resizable: true,
+          width: 90,
+          align: 'center'
+        },
+        {
+          title: '出版社全称',
+          key: 'publishingHouse',
+          align: 'center'
+        },
+        {
+          title: '填报状态',
+          slot: 'submitState',
           align: 'center'
         }
       ],
@@ -258,20 +293,17 @@
       const param = new FormData()
       // 将得到的文件流添加到FormData对象
       param.append('file', this.file, this.file.name)
-      await importCurriculumPlanByExcel(param).then(res => {
-        this.uploadLoading = false
+      await importBookStoreByExcel(param).then(res => {
         this.uploadModal = false
         this.$Message.success('成功添加' + res.data.count + '条数据')
-        // eslint-disable-next-line handle-callback-err
-      }).catch(err => {
-        this.uploadLoading = false
       })
+      this.uploadLoading = false
       // 更新成功或刷新表格数据
       await this.fetchData()
     },
     async deleteAll() {
       this.modal_loading = true
-      await deleteCurriculumPlanByXqid().then(res => {
+      await deleteBookStoreAllByXqid().then(res => {
         clearObject(this.currentData)
         this.modal_loading = false
         this.deleteXqAll = false
@@ -281,7 +313,7 @@
       await this.fetchData()
     },
     async addBook() {
-      await addCurriculumPlan(this.addData).then(res => {
+      await addBookStore(this.addData).then(res => {
         clearObject(this.addData)
         this.addDrawer = false
         this.$Message.success('新增成功。')
@@ -301,8 +333,7 @@
       this.drawer = true
     },
     async drawerCommit() {
-      console.log(this.currentData)
-      await putCurriculumPlan(this.currentData).then(res => {
+      await putBookStore(this.currentData).then(res => {
         clearObject(this.currentData)
         this.drawer = false
         this.$Message.success('修改成功。')
@@ -329,7 +360,7 @@
         type: 'warning'
       }).then(() => {
         // 确定删除
-        deleteCurriculumPlan(this.currentData.uuid).then(res => {
+        deleteBookStore(this.currentData.uuid).then(res => {
           // 清除选择的数据
           clearObject(this.currentData)
           this.$Message.success('删除成功。')
@@ -356,7 +387,9 @@
     },
     fetchData() {
       this.listLoading = true
-      getCurriculumPlanList(this.page.current, this.page.size).then(response => {
+      const data = {
+      }
+      getBookTotalList(this.page.current, this.page.size, this.search, data).then(response => {
         this.list = response.data.records
         this.page.current = response.data.current
         this.page.size = response.data.size

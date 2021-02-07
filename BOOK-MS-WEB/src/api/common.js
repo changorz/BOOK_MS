@@ -1,4 +1,7 @@
 import request from '@/utils/request'
+import store from '@/store'
+
+const xqid = store.getters.activeXqid
 
 // 下拉列表
 export function getSelectorList(type) {
@@ -55,3 +58,11 @@ export function deleteXq(xq) {
   })
 }
 
+// 获取总表的所有选择值
+export function getselectsAllByBookTota() {
+  const url = `/public/selects/allByBookTota/${xqid}`
+  return request({
+    url: url,
+    method: 'get'
+  })
+}

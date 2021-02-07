@@ -42,15 +42,26 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/example',
+    path: '/tableImport',
     component: Layout,
-    redirect: '/example/BookStore',
-    name: 'Example',
-    meta: { title: '填报表', icon: 'table' },
+    redirect: '/tableImport/BookStore',
+    name: 'TableImport',
+    meta: { title: '填报导入', icon: 'table' },
     children: [
       { path: 'BookStore', name: 'BookStore', component: () => import('@/views/table/BookStore'), meta: { title: '书籍库管理', icon: 'BookStore' }},
       { path: 'StudentInfo', name: 'StudentInfo', component: () => import('@/views/table/StudentInfo'), meta: { title: '学生信息管理', icon: 'StudentInfo' }},
       { path: 'CurriculumPlan', name: 'CurriculumPlan', component: () => import('@/views/table/CurriculumPlan'), meta: { title: '开课计划管理', icon: 'CurriculumPlan' }}
+    ]
+  },
+  {
+    // PA : 填报表格
+    path: '/PA',
+    component: Layout,
+    redirect: '/PA/BookTotal',
+    meta: { title: '填报管理', icon: 'table' },
+    children: [
+      { path: 'BookTotal', name: 'BookTotal', component: () => import('@/views/pa/BookTotal'), meta: { title: '填报总表管理', icon: 'BookTotal' }},
+      { path: 'BookTotalNull', name: 'BookTotalNull', component: () => import('@/views/pa/BookTotalNull'), meta: { title: '开启填报', icon: 'BookTotal' }}
     ]
   },
   {
@@ -61,9 +72,18 @@ export const constantRoutes = [
     children: [
       { path: 'XqidManage', name: 'XqidManage', component: () => import('@/views/common/XqidManage'), meta: { title: '学期管理', icon: 'XqidManage' }},
       { path: 'SelectorManage', name: 'SelectorManage', component: () => import('@/views/common/SelectorManage'), meta: { title: '选择列表', icon: 'SelectorManage' }}
-    ],
+    ]
   },
-
+  {
+    path: '/fill',
+    component: Layout,
+    redirect: '/fill/tableFill',
+    meta: { title: '填报模块', icon: 'form' },
+    children: [
+      { path: 'tableFill', name: 'tableFill', component: () => import('@/views/fill_in/tableFill'), meta: { title: '教材填报列表', icon: 'form' }},
+      { path: 'formFill', name: 'formFill', component: () => import('@/views/fill_in/formFill'), meta: { title: '教材填报', icon: 'form' }, hidden: true }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

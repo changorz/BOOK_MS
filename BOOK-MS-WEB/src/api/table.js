@@ -71,7 +71,7 @@ export function importBookStoreByExcel(data) {
   return request({
     url: url,
     method: 'post',
-    headers: { 'Content-Type': 'multipart/form-data' },
+    headers: { 'Content-Type': 'multipart/fill_in-data' },
     data
   })
 }
@@ -131,7 +131,7 @@ export function importCurriculumPlanByExcel(data) {
   return request({
     url: url,
     method: 'post',
-    headers: { 'Content-Type': 'multipart/form-data' },
+    headers: { 'Content-Type': 'multipart/fill_in-data' },
     data
   })
 }
@@ -193,7 +193,22 @@ export function importStudentInfoByExcel(data) {
   return request({
     url: url,
     method: 'post',
-    headers: { 'Content-Type': 'multipart/form-data' },
+    headers: { 'Content-Type': 'multipart/fill_in-data' },
     data
   })
 }
+
+// ==================== 总表管理 ==============================
+
+// 获取书籍库书籍列表
+export function getBookTotalList(pageStart, pageSize, search, data) {
+  const url = search === ''
+    ? `/admin/BookTotal/all/${xqid}/${pageStart}/${pageSize}`
+    : `/admin/BookTotal/findBookTotalByTitle/${xqid}/${search}/${pageStart}/${pageSize}`
+  return request({
+    url: url,
+    method: 'get',
+    params: data
+  })
+}
+
