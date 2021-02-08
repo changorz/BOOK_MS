@@ -40,5 +40,6 @@
             <!-- 专业 -->
             <if test="map.major != null and map.major != ''">AND major = #{map.major}</if>
         </where>
+        order by grade, course_title, cla
     </select>
 </mapper>

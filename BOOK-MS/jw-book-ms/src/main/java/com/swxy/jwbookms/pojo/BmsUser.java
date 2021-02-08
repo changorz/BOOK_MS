@@ -40,6 +40,9 @@ public class BmsUser implements Serializable {
     @ApiModelProperty(value = "别名（姓名）")
     private String alias;
 
+    @ApiModelProperty(value = "头像地址")
+    private String img;
+
     @ApiModelProperty(value = "账号描述")
     private String des;
 

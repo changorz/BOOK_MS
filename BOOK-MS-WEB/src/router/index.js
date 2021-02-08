@@ -81,7 +81,7 @@ export const constantRoutes = [
     meta: { title: '填报模块', icon: 'form' },
     children: [
       { path: 'tableFill', name: 'tableFill', component: () => import('@/views/fill_in/tableFill'), meta: { title: '教材填报列表', icon: 'form' }},
-      { path: 'formFill', name: 'formFill', component: () => import('@/views/fill_in/formFill'), meta: { title: '教材填报', icon: 'form' }, hidden: true }
+      { path: 'formFill/:uuid', name: 'formFill', component: () => import('@/views/fill_in/formFill'), meta: { title: '教材填报', icon: 'form' }, hidden: true }
     ]
   },
   // 404 page must be placed at the end !!!

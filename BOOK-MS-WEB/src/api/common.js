@@ -58,7 +58,7 @@ export function deleteXq(xq) {
   })
 }
 
-// 获取总表的所有选择值
+// 获取总表的所有下拉列表选择值
 export function getselectsAllByBookTota() {
   const url = `/public/selects/allByBookTota/${xqid}`
   return request({

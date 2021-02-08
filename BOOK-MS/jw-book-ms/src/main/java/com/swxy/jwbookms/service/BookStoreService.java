@@ -14,8 +14,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface BookStoreService extends IService<BookStore> {
 
-    Page queryBookStoreByPage(Page page, String xqid, String query);
+    void queryBookStoreByPage(Page page, String xqid, String query);
 
-    Page queryBookStoreAllByXqid(Page page, String xqid);
+    /**
+     * ISBN 书籍名 拼音码 作者 模糊查询（须选定学期） 前十条匹配
+     * @param xqid
+     * @param query
+     * @return
+     */
+    void queryBookStoreTop10(Page page, String xqid, String query);
+
+    void queryBookStoreAllByXqid(Page page, String xqid);
 
 }

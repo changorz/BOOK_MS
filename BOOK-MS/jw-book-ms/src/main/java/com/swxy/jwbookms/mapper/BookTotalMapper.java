@@ -24,4 +24,5 @@ public interface BookTotalMapper extends BaseMapper<BookTotal> {
     BookTotalCountVo getBookTotalCountVo(String xqid);
 
     List<BookTotal> queryBookTotalByMap(@Param("xqid") String xqid, @Param("map") Map map, @Param("page") Page page);
+
 }

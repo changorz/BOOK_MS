@@ -25,18 +25,35 @@ public class BookStoreServiceImpl extends ServiceImpl<BookStoreMapper, BookStore
     private final BookStoreMapper bookStoreMapper;
 
     @Override
-    public Page queryBookStoreByPage(Page page, String xqid, String query) {
+    public void queryBookStoreByPage(Page page, String xqid, String query) {
         LambdaQueryWrapper<BookStore> where = new LambdaQueryWrapper<BookStore>()
                 .eq(BookStore::getXqid, xqid)
                 .and(e -> {
                     e.like(BookStore::getBookPym, query).or().like(BookStore::getBookName, query);
                 });
-        return bookStoreMapper.selectPage(page, where);
+        bookStoreMapper.selectPage(page, where);
     }
 
     @Override
-    public Page queryBookStoreAllByXqid(Page page, String xqid) {
-        return bookStoreMapper.selectPage(page, new LambdaQueryWrapper<BookStore>().eq(BookStore::getXqid, xqid));
+    public void queryBookStoreTop10(Page page, String xqid, String query) {
+        LambdaQueryWrapper<BookStore> where = new LambdaQueryWrapper<BookStore>()
+                .eq(BookStore::getXqid, xqid)
+                .and(e -> {
+                    e
+                            .like(BookStore::getIsbn, query)
+                            .or()
+                            .like(BookStore::getBookPym, query)
+                            .or()
+                            .like(BookStore::getBookName, query)
+                            .or()
+                            .like(BookStore::getAuthor, query);
+                });
+        bookStoreMapper.selectPage(page, where);
+    }
+
+    @Override
+    public void queryBookStoreAllByXqid(Page page, String xqid) {
+        bookStoreMapper.selectPage(page, new LambdaQueryWrapper<BookStore>().eq(BookStore::getXqid, xqid));
     }
 
 }

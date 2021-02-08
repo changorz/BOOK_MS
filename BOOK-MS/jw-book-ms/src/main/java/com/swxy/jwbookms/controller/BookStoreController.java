@@ -111,10 +111,6 @@ public class BookStoreController {
      */
     @GetMapping("/BookStore/findByBookNameOrPym/{xqid}/{str}/{current}/{size}")
     @ApiOperation(value = "按书籍名或者拼音码，作者模糊分页查询（须选定学期）")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "current", value = "起始也", required = false, paramType = "path"),
-            @ApiImplicitParam(name = "size", value = "页大小", required = false, paramType = "path")
-    })
     public Response queryBookStoreByPym(
             @PathVariable String xqid,
             @PathVariable String str,

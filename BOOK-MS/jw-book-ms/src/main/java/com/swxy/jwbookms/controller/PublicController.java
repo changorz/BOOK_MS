@@ -59,5 +59,4 @@ public class PublicController {
         return new DataResponseResult<>(selectAllByBookTotal);
     }
 
-
 }

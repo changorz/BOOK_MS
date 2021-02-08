@@ -34,8 +34,8 @@
         <el-tag :type="row.submitState | statusFilter">{{ row.submitState | formatStata }}</el-tag>
       </template>
       <template slot="action" slot-scope="{ row, index }">
-        <Button @click="show(index)" size="small" style="margin-right: 5px" type="info">查看</Button>
-        <Button @click="remove(index)" size="small" type="warning">填报</Button>
+        <Button @click="show(row)" size="small" style="margin-right: 5px" type="info">查看</Button>
+        <Button @click="add(row)" size="small" type="warning">填报</Button>
       </template>
     </Table>
     <Page
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-  import { getBookTotalList } from '@/api/table'
+  import { getBookTotalList } from '@/api/fill'
   import { getselectsAllByBookTota } from '@/api/common'
 
   export default {
@@ -99,13 +99,8 @@
           align: 'center'
         },
         {
-          title: '年级',
-          key: 'grade',
-          align: 'center'
-        },
-        {
-          title: '专业',
-          key: 'major',
+          title: '班级',
+          key: 'cla',
           align: 'center'
         },
         {
@@ -164,13 +159,20 @@
     },
     fetchData() {
       this.listLoading = true
-      getBookTotalList(this.page.current, this.page.size, '', this.searchData).then(response => {
+      getBookTotalList(this.page.current, this.page.size, this.searchData).then(response => {
         this.list = response.data.records
         this.page.current = response.data.current
         this.page.size = response.data.size
         this.page.total = response.data.total
         this.listLoading = false
       })
+    },
+    show(row) {
+      console.log(row)
+    },
+    add(row) {
+      const uuid = row.uuid
+      this.$router.push({ name: 'formFill', params: { uuid }})
     }
   }
 }
