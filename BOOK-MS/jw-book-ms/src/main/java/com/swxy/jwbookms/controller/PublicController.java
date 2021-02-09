@@ -1,9 +1,12 @@
 package com.swxy.jwbookms.controller;
 
 import com.swxy.jwbookms.common.response.Response;
+import com.swxy.jwbookms.common.response.ResponseUtil;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.enums.RedisKey;
+import com.swxy.jwbookms.pojo.PublishingHouse;
 import com.swxy.jwbookms.service.BookTotalService;
+import com.swxy.jwbookms.service.PublishingHouseService;
 import com.swxy.jwbookms.service.impl.CommonService;
 import com.swxy.jwbookms.util.RedisUtil;
 import io.swagger.annotations.Api;
@@ -37,6 +40,8 @@ public class PublicController {
     private RedisUtil redisUtil;
     @Autowired
     private BookTotalService bookTotalService;
+    @Autowired
+    private PublishingHouseService publishingHouseService;
 
     // 获取学期信息：user
     @ApiOperation("获取学期信息")
@@ -57,6 +62,13 @@ public class PublicController {
     public Response getSelectsAllByBookTota(@PathVariable String xqid) {
         Map<String, List> selectAllByBookTotal = bookTotalService.getSelectAllByBookTotal(xqid);
         return new DataResponseResult<>(selectAllByBookTotal);
+    }
+
+    @GetMapping("/PublishingHouse/all")
+    @ApiOperation(value = "查询全部出版社（list）- public")
+    public Response putPublishingHouse() {
+        List<PublishingHouse> list = publishingHouseService.list();
+        return ResponseUtil.toResult(list, list.size());
     }
 
 }
