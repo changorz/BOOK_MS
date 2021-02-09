@@ -8,10 +8,12 @@ import com.swxy.jwbookms.common.response.ResponseResult;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.pojo.BookStore;
 import com.swxy.jwbookms.pojo.BookTotal;
+import com.swxy.jwbookms.pojo.StudentInfo;
 import com.swxy.jwbookms.pojo.VO.BookIsbnVO;
 import com.swxy.jwbookms.pojo.VO.BookTotalFillVo;
 import com.swxy.jwbookms.service.BookStoreService;
 import com.swxy.jwbookms.service.BookTotalService;
+import com.swxy.jwbookms.service.StudentInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,6 +39,8 @@ public class FillTableController {
     private BookTotalService bookTotalService;
     @Autowired
     private BookStoreService bookStoreService;
+    @Autowired
+    private StudentInfoService studentInfoService;
 
 
     /**
@@ -57,9 +61,9 @@ public class FillTableController {
         return new DataResponseResult<Page>(page);
     }
 
-    @GetMapping("/BookTotal/{uuid}")
+    @GetMapping("/BookTotal/{xqid}/{uuid}")
     @ApiOperation(value = "按uuid查询同专业同课程报记录")
-    public Response getBookTotal(@PathVariable String uuid) {
+    public Response getBookTotal(@PathVariable String xqid, @PathVariable String uuid) {
         BookTotal bookTotal = bookTotalService.getById(uuid);
         BookTotalFillVo bookTotalFillVo = new BookTotalFillVo();
         BeanUtils.copyProperties(bookTotal, bookTotalFillVo);
@@ -67,7 +71,22 @@ public class FillTableController {
                 .eq(BookTotal::getGrade, bookTotal.getGrade())
                 .eq(BookTotal::getMajor, bookTotal.getMajor())
                 .eq(BookTotal::getCourseTitle, bookTotal.getCourseTitle())
+                .orderByAsc(BookTotal::getCla)
         );
+        list.forEach(e -> {
+            // 只有在没有值时才去计算人数
+            if (e.getStudentBookCount() == null || e.getStudentBookCount() <= 0){
+                int count = studentInfoService.count(new LambdaQueryWrapper<StudentInfo>()
+                        .eq(StudentInfo::getXqid, xqid)
+                        .eq(StudentInfo::getCla, e.getCla())
+                        .eq(StudentInfo::getStatus, "在校"));
+                e.setStudentBookCount(count);
+            }
+            if (e.getTeacherBookCount() == null || e.getTeacherBookCount() <= 0){
+                e.setTeacherBookCount(0);
+            }
+
+        });
         bookTotalFillVo.setAdds(list);
         return new DataResponseResult(bookTotalFillVo);
     }

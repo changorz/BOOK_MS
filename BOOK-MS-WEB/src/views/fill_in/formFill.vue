@@ -1,22 +1,22 @@
 <template>
   <div class="subForm">
-    <Form :label-width="100" :model="fromData" label-colon=":" label-position="right">
+    <Form :label-width="100" :model="fromData" :rules="ruleValidate" label-colon=":" label-position="right" ref="fromData">
       <div>
         <h1 style="text-align: center">书籍填报</h1>
-        <el-row :gutter="10" style="width:70%; margin: 30px 15%">
-          <el-col :span="4">
+        <el-row :gutter="10" style=" margin: 20px 0">
+          <el-col :md="4" :sm="12">
             <span class="expand-key">年级: </span>
             <span class="expand-value">{{ info.grade }}</span>
           </el-col>
-          <el-col :span="6">
+          <el-col :md="6" :sm="12">
             <span class="expand-key">专业: </span>
             <span class="expand-value">{{ info.major }}</span>
           </el-col>
-          <el-col :span="6">
+          <el-col :md="6" :sm="12">
             <span class="expand-key">学院: </span>
             <span class="expand-value">{{ info.twoLevelCollege }}</span>
           </el-col>
-          <el-col :span="8">
+          <el-col :md="8" :sm="12">
             <span class="expand-key">课程名称: </span>
             <span class="expand-value">{{ info.courseTitle }}</span>
           </el-col>
@@ -29,19 +29,39 @@
         </div>
         <div>
           <el-row :gutter="10">
-            <el-col :span="8">
-              <FormItem label="ISBN" required>
-                <Input v-model="fromData.a" />
+            <el-col :lg="6" :md="8" :sm="12">
+              <FormItem  label="ISBN" prop="isbn" required>
+                <Input v-model="fromData.isbn" />
               </FormItem>
             </el-col>
-            <el-col :span="8">
-              <FormItem label="书名" required>
-                <Input v-model="fromData.b" />
+            <el-col :lg="6" :md="8" :sm="12">
+              <FormItem  label="书名" prop="bookName" required>
+                <Input v-model="fromData.bookName" />
               </FormItem>
             </el-col>
-            <el-col :span="8">
-              <FormItem label="书名" required>
-                <Input v-model="info.courseTitle" />
+            <el-col :lg="6" :md="8" :sm="12">
+              <FormItem  label="作者" prop="author" required>
+                <Input v-model="fromData.author" />
+              </FormItem>
+            </el-col>
+            <el-col :lg="6" :md="8" :sm="12">
+              <FormItem  label="价格" prop="pricing" required>
+                <Input prefix="logo-yen" type="number" v-model="fromData.pricing"/>
+              </FormItem>
+            </el-col>
+            <el-col :lg="6" :md="8" :sm="12">
+              <FormItem  label="出版社名称" prop="publishingHouse" required>
+                <Select style="width:100%" v-model="fromData.publishingHouse">
+                  <Option :key="item.uuid" :value="item.publishingHouse" v-for="item in publishingHouseList">{{ item.publishingHouse }}</Option>
+                </Select>
+              </FormItem>
+            </el-col>
+            <el-col :lg="6" :md="8" :sm="12">
+              <FormItem  label="出版社补充" prop="publishingHouseSupplement">
+                <Select style="width:100%" v-model="fromData.publishingHouseSupplement">
+                  <Option :key="ind" :value="val" v-for="(val, ind) in publishingHouseSupplements">{{ val }}</Option>
+                  <Option value=''>空</Option>
+                </Select>
               </FormItem>
             </el-col>
           </el-row>
@@ -49,32 +69,91 @@
       </div>
       <div>
         <h3 style="margin: 20px 0;">选择填报班级</h3>
-      </div>
-      <div>
-        <h3 style="margin: 20px 0;">其他信息</h3>
-      </div>
-      <div>
-        底部
-      </div>
-      <div>
         <el-row :gutter="10">
-          <el-col :span="8">
-            <FormItem label="ISBN" required>
-              <Input v-model="fromData.a" />
+          <CheckboxGroup @on-change="checkboxChange" style="margin-left: 3rem" v-model="fromData.claCheckbox">
+            <el-col :key="ind" :lg="6" :md="8" :sm="12" style="margin: .5rem 0" v-for="(val, ind) in claCheckboxs">
+              <Checkbox :label="val" ></Checkbox>
+            </el-col>
+          </CheckboxGroup>
+        </el-row>
+      </div>
+      <div>
+        <h3 style="margin: 20px 0;">版本信息</h3>
+        <el-row :gutter="10">
+          <el-col :lg="6" :md="8" :sm="12">
+            <FormItem  label="年份" prop="bookYear" required>
+              <Input v-model="fromData.bookYear" />
             </FormItem>
           </el-col>
-          <el-col :span="8">
-            <FormItem label="书名" required>
-              <Input v-model="fromData.b" />
+          <el-col :lg="6" :md="8" :sm="12">
+            <FormItem  label="版次" prop="bookYersion" required>
+              <Input v-model="fromData.bookYersion" />
             </FormItem>
           </el-col>
-          <el-col :span="8">
-            <FormItem label="书名" required>
-              <Input v-model="info.courseTitle" />
+          <el-col :lg="6" :md="8" :sm="12">
+            <FormItem  label="教材类型" prop="bookType" required>
+              <Input v-model="fromData.bookType" />
             </FormItem>
           </el-col>
         </el-row>
       </div>
+      <div>
+        <h3 style="margin: 20px 0;">用书数量</h3>
+        <div :key="ind" v-for="(val, ind) in claCheckboxs" v-if="clasCount[3][ind]">
+          <el-row :gutter="10">
+            <el-col :lg="6" :md="8" :sm="12">
+              <div align="center" style="margin: 20px 0">{{val}}</div>
+            </el-col>
+            <el-col :lg="6" :md="8" :sm="12">
+              <FormItem  label="学生用书数" prop="studentBookCount" >
+                <Input disabled type="number" v-model="clasCount[0][ind]" />
+              </FormItem>
+            </el-col>
+            <el-col :lg="6" :md="8" :sm="12">
+              <FormItem label="教师用书数" required>
+                <Input @on-change="totalCountChange(ind)" type="number" v-model="clasCount[1][ind]"/>
+              </FormItem>
+            </el-col>
+            <el-col :lg="6" :md="8" :sm="12">
+              <FormItem  label="总数" prop="totalBook" >
+                <Input disabled type="number" v-model="clasCount[2][ind]"/>
+              </FormItem>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin: 20px 0;">其他信息</h3>
+        <el-row :gutter="10">
+          <el-col :lg="6" :md="8" :sm="12">
+            <FormItem  label="授课老师" prop="lecturer" required>
+              <Input v-model="fromData.lecturer" />
+            </FormItem>
+          </el-col>
+          <el-col :lg="6" :md="8" :sm="12">
+            <FormItem  label="电话" prop="tel" required>
+              <Input v-model="fromData.tel" />
+            </FormItem>
+          </el-col>
+          <el-col :lg="6" :md="8" :sm="12">
+            <FormItem  label="所属教研室" prop="staff_room" required>
+              <Input v-model="fromData.staff_room" />
+            </FormItem>
+          </el-col>
+          <el-col :lg="24" :md="24" :sm="24">
+            <FormItem  label="备注" prop="remark">
+              <Input placeholdert="如果是自选教材，请填写备注。" style="width: 90%;" type="textarea" v-model="fromData.remark"/>
+            </FormItem>
+          </el-col>
+        </el-row>
+      </div>
+      <div align="center">
+        <Button @click="handleReset('fromData')" style="margin: 20px 10px" type="info">重置</Button>
+        <Button @click="handleSubmit('fromData')" style="width: 15rem; margin: 20px 10px" type="success">提交</Button>
+      </div>
+      <br>
+      <br>
+      <br>
     </Form>
     要填报的用fromData先存起来，然后看用户选中了那几个班级，然后修改info中的数据，传到后台完成修改
     <!--------------------------------- 分割线 -------------------------------------------->
@@ -100,42 +179,46 @@
       </el-select>
       <div style="padding: 20px 5%">
         <el-row>
-          <el-col :lg="6" class="bookView">
-            <el-image
-              :preview-src-list="[bookDescription.bookImg]"
-              :src="bookDescription.bookImg"
-              style="width: 100%; height: 90%">
-            </el-image>
+          <el-col   :md="6" class="bookView" style="align-content: center">
+            <div align="center">
+              <el-image
+                :preview-src-list="[bookDescription.bookImg]"
+                :src="bookDescription.bookImg"
+                style="width: 8rem; height: 12rem;"
+              >
+              </el-image>
+            </div>
             <div class="demonstration">图示</div>
           </el-col>
-          <el-col :lg="9" class="bookView">
+          <el-col   :md="9" class="bookView">
             <div class="bookViewTitle">数据库中数据</div>
-            <div class="bookView-data">
+            <!-- 除了 出版社补充 都用ISBN来控制 -->
+            <div class="bookView-data" v-if="bookDescription.isbn">
               <span class="bookView-expand-key">ISBN: </span>
               <span class="bookView-expand-value">{{ bookDescription.isbn }}</span>
             </div>
-            <div class="bookView-data">
+            <div class="bookView-data" v-if="bookDescription.isbn">
               <span class="bookView-expand-key">书名: </span>
               <span class="bookView-expand-value">{{ bookDescription.bookName }}</span>
             </div>
-            <div class="bookView-data">
+            <div class="bookView-data" v-if="bookDescription.isbn">
               <span class="bookView-expand-key">作者: </span>
               <span class="bookView-expand-value">{{ bookDescription.author }}</span>
             </div>
-            <div class="bookView-data">
+            <div class="bookView-data" v-if="bookDescription.isbn">
               <span class="bookView-expand-key">价格: </span>
               <span class="bookView-expand-value">{{ bookDescription.pricing }}（元）</span>
             </div>
-            <div class="bookView-data">
+            <div class="bookView-data" v-if="bookDescription.isbn">
               <span class="bookView-expand-key">出版社: </span>
               <span class="bookView-expand-value">{{ bookDescription.publishingHouse }}</span>
             </div>
-            <div class="bookView-data">
+            <div class="bookView-data" v-if="bookDescription.publishingHouseSupplement">
               <span class="bookView-expand-key">出版社补充: </span>
               <span class="bookView-expand-value">{{ bookDescription.publishingHouseSupplement }}</span>
             </div>
           </el-col>
-          <el-col :lg="9" class="bookView">
+          <el-col   :md="9" class="bookView">
             <div class="bookViewTitle">爬取数据（补充）</div>
             <div class="bookView-data">
               <span class="bookView-expand-key">ISBN: </span>
@@ -166,7 +249,7 @@
       </div>
       <span class="dialog-footer" slot="footer">
         <el-button @click="dialogTableVisible = false" size="mini">取 消</el-button>
-        <el-button @click="dialogTableVisible = false" size="mini" type="primary">选 定</el-button>
+        <el-button @click="selectOk" size="mini" type="primary">选 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -174,6 +257,8 @@
 
 <script>
   import { getBookOne, getBookStoreListTop10, getFillInfo } from '@/api/fill'
+  import { copyBean } from '@/utils/bmsUtil'
+  import { getPublishingHousePublic, getSelectorList } from '@/api/common'
 
   export default {
   data() {
@@ -182,26 +267,96 @@
       options: [],
       dialogTableVisible: false,
       loading: false,
+      // 搜索框绑定value
       selectValue: '',
-      // 用于渲染页面的数据
-      info: { },
       // 选中书籍详细信息
       bookDescription: {},
+      // 用于渲染页面的数据
+      info: { },
       // 表单中填的数据
       fromData: {
-        a: '1',
-        b: '1'
+        // 书籍信息
+        isbn: '',
+        bookName: '',
+        author: '',
+        pricing: '',
+        publishingHouse: '',
+        publishingHouseSupplement: '',
+        // 班级选择
+        claCheckbox: [],
+        // // 用书数量
+        // studentBookCount: 0,
+        // teacherBookCount: '0',
+        totalBook: 0,
+        // 版本信息
+        bookYear: '',
+        bookYersion: '',
+        bookType: '',
+        // 其他填报信息
+        lecturer: '',
+        tel: '',
+        staff_room: '',
+        remark: ''
       },
+      // 班级复选框
+      claCheckboxs: [],
+      // 每个班级用书数
+      clasCount: [
+        // 学生
+        [],
+        // 老师
+        [],
+        // 总数
+        [],
+        // 是否选择
+        []
+      ],
       // 屏幕宽
       screenWidth: document.body.clientWidth,
       // 屏幕高
-      screeHeight: document.body.clientHeight
+      screeHeight: document.body.clientHeight,
+      // 下拉列表
+      publishingHouseList: [],
+      publishingHouseSupplements: [],
+      // 表单校验
+      ruleValidate: {
+        isbn: [{ required: true, message: 'ISBN不能为空', trigger: 'blur' }],
+        bookName: [{ required: true, message: '书名不能为空', trigger: 'blur' }],
+        author: [{ required: true, message: '作者不能为空', trigger: 'blur' }],
+        pricing: [{ required: true, message: '价格不能为空', trigger: 'blur' }],
+        publishingHouse: [{ required: true, message: '出版社不能为空', trigger: 'blur' }],
+        bookYear: [{ required: true, message: '年份不能为空', trigger: 'blur' }],
+        lecturer: [{ required: true, message: '版次不能为空', trigger: 'blur' }],
+        bookYersion: [{ required: true, message: '教材类型不能为空', trigger: 'blur' }],
+        bookType: [{ required: true, message: '授课老师不能为空', trigger: 'blur' }],
+        tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
+        staff_room: [{ required: true, message: '所属教研室不能为空', trigger: 'blur' }]
+      }
     }
   },
   created() {
     getFillInfo(this.$route.params.uuid).then(res => {
       this.info = res.data
+      // 设置班级选项，并且默认全选
+      const adds = res.data.adds
+      this.claCheckboxs = []
+      this.fromData.claCheckbox = []
+      for (let i = 0; i < adds.length; i++) {
+        this.claCheckboxs[i] = adds[i].cla
+        // 后面转成字符串是校验回显校验不通过问题
+        this.clasCount[0][i] = adds[i].studentBookCount
+        this.clasCount[1][i] = adds[i].teacherBookCount
+        this.clasCount[2][i] = (Number.parseInt(adds[i].studentBookCount) + Number.parseInt(adds[i].teacherBookCount)) + ''
+        this.clasCount[3][i] = true
+        // 全选
+        this.fromData.claCheckbox[i] = adds[i].cla
+      }
       console.log(res.data)
+    })
+    // 初始化下拉列表
+    this.getPublishingHouse()
+    getSelectorList('publishingHouseSupplements').then(res => {
+      this.publishingHouseSupplements = res.data
     })
   },
   computed: {
@@ -211,11 +366,46 @@
     }
   },
   methods: {
+    handleSubmit(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          console.log(this.fromData)
+        } else {
+          this.$Message.error('校验失败!')
+        }
+      })
+    },
     selectValueChange() {
       getBookOne(this.selectValue).then(res => {
         this.bookDescription = res.data
         console.log(res.data)
       })
+    },
+    selectOk() {
+      this.dialogTableVisible = false
+      copyBean(this.bookDescription, this.fromData)
+    },
+    totalCountChange(i) {
+      console.log(i)
+      console.log()
+      if (this.clasCount[1][i] === '') {
+        this.clasCount[1][i] = 0
+      } else {
+        this.clasCount[1][i] = Number.parseInt(this.clasCount[1][i])
+      }
+      this.clasCount[2][i] = Number.parseInt(this.clasCount[0][i]) + Number.parseInt(this.clasCount[1][i])
+    },
+    checkboxChange(data) {
+      for (let i = 0; i < this.claCheckboxs.length; i++) {
+        if (data.indexOf(this.claCheckboxs[i]) !== -1) {
+          this.clasCount[3][i] = true
+        } else {
+          this.clasCount[3][i] = false
+        }
+      }
+    },
+    handleReset(name) {
+      this.$refs[name].resetFields()
     },
     remoteMethod(query) {
       if (query !== '') {
@@ -255,6 +445,12 @@
         }
       }
       return str
+    },
+    // 获取出版社列表
+    getPublishingHouse() {
+      getPublishingHousePublic().then(res => {
+        this.publishingHouseList = res.queryResult.list
+      })
     }
   }
 }
@@ -271,7 +467,7 @@
     color: #20a0ff;
   }
   .bookView{
-    height: 340px;
+    height: 17rem;
     padding: 20px;
   }
   .demonstration{

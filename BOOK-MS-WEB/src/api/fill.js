@@ -15,7 +15,7 @@ export function getBookTotalList(pageStart, pageSize, data) {
 
 // 获取填报时的展示信息
 export function getFillInfo(uuid) {
-  const url = `/fill/BookTotal/${uuid}`
+  const url = `/fill/BookTotal/${xqid}/${uuid}`
   return request({
     url: url,
     method: 'get'

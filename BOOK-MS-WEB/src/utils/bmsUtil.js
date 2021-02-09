@@ -4,3 +4,12 @@ export function clearObject(data) {
     data[key] = ''
   }
 }
+
+// 拷贝对象
+export function copyBean(source, target) {
+  for (var key in target) {
+    if (source[key] !== undefined && source[key] !== null && source[key] !== '') {
+      target[key] = source[key] + ''
+    }
+  }
+}

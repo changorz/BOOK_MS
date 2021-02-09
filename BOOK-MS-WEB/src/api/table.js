@@ -17,7 +17,7 @@ export function getBookStoreList(pageStart, pageSize, search) {
   })
 }
 
-// 获取全部的出版社
+// 获取全部的出版社:admin
 export function getPublishingHouse() {
   const url = '/admin/PublishingHouse/all'
   return request({

@@ -66,3 +66,12 @@ export function getselectsAllByBookTota() {
     method: 'get'
   })
 }
+
+// 获取全部的出版社Lpublic
+export function getPublishingHousePublic() {
+  const url = '/public/PublishingHouse/all'
+  return request({
+    url: url,
+    method: 'get'
+  })
+}
