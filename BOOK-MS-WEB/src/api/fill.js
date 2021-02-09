@@ -39,3 +39,13 @@ export function getBookOne(uuid) {
     method: 'get'
   })
 }
+
+// ** 填报 **
+export function postBookTotal(data) {
+  const url = `/fill/BookTotal`
+  return request({
+    url: url,
+    method: 'put',
+    data
+  })
+}

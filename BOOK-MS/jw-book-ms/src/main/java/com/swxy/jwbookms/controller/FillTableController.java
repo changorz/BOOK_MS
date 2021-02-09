@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.swxy.jwbookms.common.response.Response;
 import com.swxy.jwbookms.common.response.ResponseResult;
+import com.swxy.jwbookms.common.response.ResponseUtil;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.pojo.BookStore;
 import com.swxy.jwbookms.pojo.BookTotal;
@@ -21,9 +22,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -117,14 +122,19 @@ public class FillTableController {
         return  new DataResponseResult(bookIsbnVO);
     }
 
-
-
-    @PostMapping("/BookTotal")
-    @ApiOperation(value = "填报一条记录")
-    public Response postBookTotal(@RequestBody @Validated BookTotal bookTotal) {
-        boolean save = bookTotalService.save(bookTotal);
-        return save ? new DataResponseResult(bookTotal) : ResponseResult.FAIL();
+    @Transactional
+    @PutMapping("/BookTotal")
+    @ApiOperation(value = "填报一条记录，add中包含多个班级的填报。")
+    public Response postBookTotal(@RequestBody @Validated BookTotalFillVo bookTotalFillVo) {
+        List<BookTotal> adds = bookTotalFillVo.getAdds();
+        adds.forEach(e -> {
+            // 设置一些值
+            e.setSubmitState(1);
+            e.setTotalPricing(e.getPricing().multiply(new BigDecimal(e.getTotalBook()), MathContext.DECIMAL32));
+            e.setWriteId(SecurityContextHolder.getContext().getAuthentication().getName());
+        });
+        boolean update = bookTotalService.updateBatchById(adds);
+        return ResponseUtil.toResult(update);
     }
-
 
 }

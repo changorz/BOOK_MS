@@ -22,10 +22,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 /**
  * <p>
@@ -113,6 +110,10 @@ public class BookTotal implements Serializable {
     @Length(max = 25, message = "bookType: 参数长度不能大于25。")
     private String bookType;
 
+    @NotNull(message = "cooperativePublishingHouse: 参数不能为空,默认true。")
+    @ApiModelProperty(value = "是否是合作出版社")
+    private boolean cooperativePublishingHouse;
+
     @ExcelProperty(value = "所属教研室")
     @ApiModelProperty(value = "所属教研室")
     @NotBlank(message = "staffRoom: 参数不能为空。")
@@ -137,14 +138,17 @@ public class BookTotal implements Serializable {
     @ApiModelProperty(value = "定价", required = true)
     private BigDecimal pricing;
 
+    @Min(value = 0, message = "studentBookCount：必须大于等于0")
     @ExcelProperty("学生用书数")
     @ApiModelProperty(value = "学生用书数")
     private Integer studentBookCount;
 
+    @Min(value = 0, message = "teacherBookCount：必须大于等于0")
     @ExcelProperty("教师用书数")
     @ApiModelProperty(value = "教师用书数")
     private Integer teacherBookCount;
 
+    @Min(value = 0, message = "teacherBookCount：totalBook")
     @ExcelProperty("总计")
     @ApiModelProperty(value = "总计")
     private Integer totalBook;
@@ -180,7 +184,6 @@ public class BookTotal implements Serializable {
     @ExcelIgnore
     @ApiModelProperty(value = "填入账号ID", hidden = true)
     private String writeId;
-
 
     @NotBlank(message = "xqid: 参数不能为空。")
     @Pattern(regexp = "20[0-9]{2}-20[0-9]{2}-[0-9]", message = "xqid: 参数错误。 示例: 2020-2021-1")
