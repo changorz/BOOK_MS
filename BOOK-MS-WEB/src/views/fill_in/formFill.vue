@@ -85,7 +85,10 @@
           </el-col>
           <el-col :lg="6" :md="8" :sm="12">
             <FormItem label="教材类型" prop="bookType" required>
-              <Input v-model="fromData.bookType" />
+              <Select v-model="fromData.bookType" style="width:100%" >
+                <Option v-for="(val, ind) in bookTypes" :key="ind" :value="val">{{ val }}</Option>
+                <Option value="">空</Option>
+              </Select>
             </FormItem>
           </el-col>
         </el-row>
@@ -142,7 +145,9 @@
           </el-col>
           <el-col :lg="6" :md="8" :sm="12">
             <FormItem label="所属教研室" prop="staffRoom" required>
-              <Input v-model="fromData.staffRoom" />
+              <Select v-model="fromData.staffRoom" style="width:100%" >
+                <Option v-for="(val, ind) in staffRooms" :key="ind" :value="val">{{ val }}</Option>
+              </Select>
             </FormItem>
           </el-col>
           <el-col :lg="24" :md="24" :sm="24">
@@ -291,7 +296,7 @@ export default {
         claCheckbox: [],
         // 版本信息
         bookYear: '',
-        bookVersion: '',
+        bookVersion: '最新',
         bookType: '',
         // 其他填报信息
         lecturer: '',
@@ -319,6 +324,8 @@ export default {
       // 下拉列表
       publishingHouseList: [],
       publishingHouseSupplements: [],
+      bookTypes: [],
+      staffRooms: [],
       // 表单校验
       ruleValidate: {
         isbn: [{ required: true, message: 'ISBN不能为空', trigger: 'blur' }],
@@ -368,6 +375,12 @@ export default {
     this.getPublishingHouse()
     getSelectorList('publishingHouseSupplements').then(res => {
       this.publishingHouseSupplements = res.data
+    })
+    getSelectorList('bookTypes').then(res => {
+      this.bookTypes = res.data
+    })
+    getSelectorList('staffRooms').then(res => {
+      this.staffRooms = res.data
     })
   },
   methods: {
@@ -420,7 +433,7 @@ export default {
       copyBean(this.bookDescription, this.fromData)
     },
     totalCountChange(i) {
-      if (this.clasCount[1][i] === '') {
+      if (this.clasCount[1][i] === null) {
         this.clasCount[1][i] = 0
       } else if (Number.parseInt(this.clasCount[1][i]) < 1) {
         this.clasCount[1][i] = 0
@@ -439,6 +452,10 @@ export default {
       }
     },
     handleReset(name) {
+      for (let i = 0; i < this.clasCount[1].length; i++) {
+        this.clasCount[1][i] = 0
+        this.clasCount[2][i] = this.clasCount[0][i]
+      }
       this.$refs[name].resetFields()
     },
     remoteMethod(query) {
