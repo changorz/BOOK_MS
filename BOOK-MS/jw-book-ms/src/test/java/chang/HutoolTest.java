@@ -25,13 +25,6 @@ public class HutoolTest {
     }
 
     @Test
-    public void t2() {
-        String str = "d\\s-gf/sfd-g7- 7-  7 ";
-        String s = str.replaceAll("\\D", "");
-        System.out.println();
-    }
-
-    @Test
     public void t3() {
         String s = BMSUtil.xqidToZh("2020-2021-3");
         System.out.println(s);

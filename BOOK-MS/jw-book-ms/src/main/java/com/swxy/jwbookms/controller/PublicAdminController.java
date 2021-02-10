@@ -52,6 +52,10 @@ public class PublicAdminController {
         selectorSet.add("majors");
         // 二级学院管理
         selectorSet.add("twoLevelColleges");
+        // 教材类型
+        selectorSet.add("bookTypes");
+        // 教研室
+        selectorSet.add("staffRooms");
     }
 
     // ======================================= 学期管理 =========================================
