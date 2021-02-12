@@ -8,7 +8,7 @@
     <Properties>
         <!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符-->
         <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
-        <property name="LOG_PATTERN" value="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+        <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%-5level} [%t] %highlight{%c{1.}.%M(%L)}: %msg%n"/>
         <!--        <property name="LOG_PATTERN" value="%date{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}  &ndash;&gt; %msg%n"/>-->
         <!-- 定义日志存储的路径，不要配置相对路径 -->
         <property name="FILE_PATH" value="/logs"/>
@@ -63,14 +63,21 @@
                 additivity="false">
             <AppenderRef ref="Console"/>
         </logger>
+        <!-- springfox -->
+        <logger name="springfox.bean.validators.plugins" level="info"
+                additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <logger name="springfox.documentation" level="FATAL"
+                additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
         <!--监控系统信息-->
         <!--若是additivity设为false，则 子Logger 只会在自己的appender里输出，而不会在 父Logger 的appender里输出。-->
         <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="springfox.documentation" level="info" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
+
         <!-- 排除其他无用信息 -->
         <Logger name="org.hibernate.validator" level="info" additivity="false">
             <AppenderRef ref="Console"/>

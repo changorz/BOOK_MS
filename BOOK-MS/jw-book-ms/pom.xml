@@ -115,14 +115,7 @@
         <!--swagger2-->
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
+            <artifactId>springfox-boot-starter</artifactId>
         </dependency>
 
         <!-- log4j2 -->
@@ -179,7 +172,13 @@
             <artifactId>commons-pool2</artifactId>
         </dependency>
 
-        <!-- -->
+        <!-- 统一Guava版本防止冲突 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>30.1-jre</version>
+        </dependency>
+
         <!-- -->
         <!-- -->
         <!-- -->

@@ -7,6 +7,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
@@ -18,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@EnableSwagger2
 @Profile("dev")
+@EnableOpenApi
 public class Swagger2Config {
     /**
      * 通过 createRestApi函数来构建一个DocketBean
@@ -34,9 +35,7 @@ public class Swagger2Config {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.swxy.jwbookms.controller"))
                 .paths(PathSelectors.any())
-                .build()
-                .securitySchemes(unifiedAuth());
-        // .securityContexts(securityContexts());
+                .build();
     }
 
     //构建 api文档的详细信息函数
