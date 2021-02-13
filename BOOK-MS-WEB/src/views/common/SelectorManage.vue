@@ -114,6 +114,44 @@ export default {
               align: 'center'
             }
           ]
+        },
+        {
+          name: '年份',
+          type: 'bookYears',
+          data: [],
+          length: 0,
+          columns: [
+            {
+              title: '名称',
+              key: 'value',
+              align: 'center'
+            },
+            {
+              title: '操作',
+              slot: 'bookYear',
+              width: 150,
+              align: 'center'
+            }
+          ]
+        },
+        {
+          name: '版次',
+          type: 'bookVersions',
+          data: [],
+          length: 0,
+          columns: [
+            {
+              title: '名称',
+              key: 'value',
+              align: 'center'
+            },
+            {
+              title: '操作',
+              slot: 'bookVersion',
+              width: 150,
+              align: 'center'
+            }
+          ]
         }
       ]
     }

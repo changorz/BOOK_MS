@@ -41,7 +41,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").access("hasRole('admin')")
                 .antMatchers("/swagger-ui/**").permitAll()
 
-                
+
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/v2/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()

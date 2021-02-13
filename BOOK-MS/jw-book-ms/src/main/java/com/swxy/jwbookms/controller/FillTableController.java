@@ -22,10 +22,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -40,6 +42,8 @@ import java.util.Map;
 @RequestMapping("/fill")
 public class FillTableController {
 
+    @Autowired
+    private RestTemplate restTemplate;
     @Autowired
     private BookTotalService bookTotalService;
     @Autowired
@@ -116,8 +120,13 @@ public class FillTableController {
         BookStore bookStore = bookStoreService.getById(uuid);
         BookIsbnVO bookIsbnVO = new BookIsbnVO();
         BeanUtils.copyProperties(bookStore, bookIsbnVO);
+        // 远程获取信息
+        String url = "https://book.feelyou.top/isbn/" + bookStore.getIsbn();
+        System.out.println(url);
+        Map forObject = restTemplate.getForObject(url, Map.class);
         // TODO 获取图片
-        bookIsbnVO.setBookImg("http://pic.changaspl.xin/img/AF02A17983B5618060616C0387C2D6D9.jpg");
+        bookIsbnVO.setCover_url((String) forObject.getOrDefault("cover_url", ""));
+        System.out.println((String) forObject.getOrDefault("cover_url", ""));
 
         return  new DataResponseResult(bookIsbnVO);
     }

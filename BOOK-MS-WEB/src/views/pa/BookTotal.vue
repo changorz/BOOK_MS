@@ -4,25 +4,25 @@
       <label style="font-size: 25px;">{{ this.$route.meta.title }}</label>
     </div>
     <div class="input_top">
-      <Input @keyup.enter.native="onSearch" placeholder="搜索书籍" style="width: auto;" v-model="search" />
-      <Button @click="onSearch" type="info">搜索</Button>
+      <Input v-model="search" placeholder="搜索书籍" style="width: auto;" @keyup.enter.native="onSearch" />
+      <Button type="info" @click="onSearch">搜索</Button>
       <div style="float: right; margin-right: 20px">
         <Button @click="uploadModal = true">excel上传</Button>
-        <Button @click="addDrawer = true" type="success">新增</Button>
-        <Button @click="updataBut" type="primary">修改</Button>
-        <Button @click="deleteObj" type="warning">删除</Button>
-        <Button @click="deleteXqAll = true" type="error">学期数据删除</Button>
+        <Button type="success" @click="addDrawer = true">新增</Button>
+        <Button type="primary" @click="updataBut">修改</Button>
+        <Button type="warning" @click="deleteObj">删除</Button>
+        <Button type="error" @click="deleteXqAll = true">学期数据删除</Button>
       </div>
     </div>
     <Table
       :columns="columns"
       :data="list"
       :loading="listLoading"
-      @on-current-change="onCurrentChange"
       highlight-row
+      @on-current-change="onCurrentChange"
     >
       <template slot="submitState" slot-scope="{ row }">
-        <el-tag :type="row.submitState | statusFilter">{{row.submitState | formatStata}}</el-tag>
+        <el-tag :type="row.submitState | statusFilter">{{ row.submitState | formatStata }}</el-tag>
       </template>
     </Table>
     <Page
@@ -30,9 +30,9 @@
       :page-size="page.size"
       :page-size-opts="pageOpts"
       :total="page.total"
+      show-sizer
       @on-change="currentChange"
       @on-page-size-change="pageSizeChange"
-      show-sizer
     />
     <Modal v-model="deleteXqAll" width="360">
       <p slot="header" style="color:#f60; text-align:center">
@@ -44,16 +44,16 @@
         <p>是否继续删除？</p>
       </div>
       <div slot="footer">
-        <Button :loading="modal_loading" @click="deleteAll" long size="large" type="error">删除</Button>
+        <Button :loading="modal_loading" long size="large" type="error" @click="deleteAll">删除</Button>
       </div>
     </Modal>
     <Modal
+      v-model="uploadModal"
       :loading="uploadLoading"
       :styles="{top: '180px'}"
-      @on-ok="fileload"
       ok-text="上传"
       title="Excel导入"
-      v-model="uploadModal"
+      @on-ok="fileload"
     >
       <div>表中必要字段：
         <el-link type="success">ISBN</el-link>,
@@ -76,25 +76,26 @@
           <p>请选择正确的Excel文件</p>
         </div>
       </Upload>
-      <div style="padding: 10px 0 0 10px" v-if="file !== null">上传文件: <p style="color: deeppink; display: inline-block">
+      <div v-if="file !== null" style="padding: 10px 0 0 10px">上传文件: <p style="color: deeppink; display: inline-block">
         {{ file.name }}</p></div>
     </Modal>
   </div>
 </template>
 
 <script>
-  import {
-    addBookStore,
-    deleteBookStore,
-    deleteBookStoreAllByXqid,
-    getBookTotalList,
-    importBookStoreByExcel,
-    putBookStore
-  } from '@/api/table'
-  import { clearObject } from '@/utils/bmsUtil'
-  import expandRow from './table-expand.vue'
+import {
+  addBookStore,
+  deleteBookStore,
+  deleteBookStoreAllByXqid,
+  getBookTotalList,
+  importBookStoreByExcel,
+  putBookStore
+} from '@/api/table'
+import { getFillTime } from '@/api/common'
+import { clearObject } from '@/utils/bmsUtil'
+import expandRow from './table-expand.vue'
 
-  export default {
+export default {
   components: {
     // eslint-disable-next-line vue/no-unused-components
     expandRow
@@ -276,6 +277,13 @@
     }
   },
   created() {
+    // 检验是否开启填报
+    getFillTime().then(res => {
+      if (!res.data.isFill) {
+        this.warning(false)
+        this.$router.push('/PA/BookTotalNull')
+      }
+    })
     this.fetchData()
   },
   methods: {
@@ -395,6 +403,13 @@
         this.page.size = response.data.size
         this.page.total = response.data.total
         this.listLoading = false
+      })
+    },
+    warning(nodesc) {
+      this.$notify({
+        title: '警告',
+        message: '数据库无记录，请开启填报',
+        type: 'warning'
       })
     }
   }

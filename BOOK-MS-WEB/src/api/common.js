@@ -75,3 +75,12 @@ export function getPublishingHousePublic() {
     method: 'get'
   })
 }
+
+// 获取当前学期填报时间信息
+export function getFillTime() {
+  const url = `/public/FillTimel/${xqid}`
+  return request({
+    url: url,
+    method: 'get'
+  })
+}

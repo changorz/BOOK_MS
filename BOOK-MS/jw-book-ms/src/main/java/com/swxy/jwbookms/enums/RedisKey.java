@@ -5,7 +5,9 @@ public enum RedisKey {
     // 当前活跃xqid
     ACTIVE_XQID("activeXqid"),
     // 所有xqid
-    XQID_LIST("xqidList");
+    XQID_LIST("xqidList"),
+    // 学期id时间
+    XQID_Time("xqidTime");
 
     private String value;
 

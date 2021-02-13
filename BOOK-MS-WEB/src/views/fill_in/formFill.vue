@@ -74,20 +74,24 @@
         <h3 style="margin: 20px 0;">版本信息</h3>
         <el-row :gutter="10">
           <el-col :lg="6" :md="8" :sm="12">
-            <FormItem label="年份" prop="bookYear" required>
-              <Input v-model="fromData.bookYear" />
+            <FormItem label="年份" prop="bookYear">
+              <Select v-model="fromData.bookYear" style="width:100%" >
+                <Option value="">空</Option>
+                <Option v-for="(val, ind) in bookYears" :key="ind" :value="val">{{ val }}</Option>
+              </Select>
             </FormItem>
           </el-col>
           <el-col :lg="6" :md="8" :sm="12">
             <FormItem label="版次" prop="bookVersion" required>
-              <Input v-model="fromData.bookVersion" />
+              <Select v-model="fromData.bookVersion" style="width:100%" >
+                <Option v-for="(val, ind) in bookVersions" :key="ind" :value="val">{{ val }}</Option>
+              </Select>
             </FormItem>
           </el-col>
           <el-col :lg="6" :md="8" :sm="12">
-            <FormItem label="教材类型" prop="bookType" required>
+            <FormItem label="教材类型" prop="bookType">
               <Select v-model="fromData.bookType" style="width:100%" >
                 <Option v-for="(val, ind) in bookTypes" :key="ind" :value="val">{{ val }}</Option>
-                <Option value="">空</Option>
               </Select>
             </FormItem>
           </el-col>
@@ -191,8 +195,8 @@
           <el-col :md="6" class="bookView" style="align-content: center">
             <div align="center">
               <el-image
-                :preview-src-list="[bookDescription.bookImg]"
-                :src="bookDescription.bookImg"
+                :preview-src-list="[bookDescription.cover_url]"
+                :src="bookDescription.cover_url"
                 style="width: 8rem; height: 12rem;"
               />
             </div>
@@ -326,6 +330,8 @@ export default {
       publishingHouseSupplements: [],
       bookTypes: [],
       staffRooms: [],
+      bookYears: [],
+      bookVersions: [],
       // 表单校验
       ruleValidate: {
         isbn: [{ required: true, message: 'ISBN不能为空', trigger: 'blur' }],
@@ -333,10 +339,9 @@ export default {
         author: [{ required: true, message: '作者不能为空', trigger: 'blur' }],
         pricing: [{ required: true, message: '价格不能为空', trigger: 'blur' }],
         publishingHouse: [{ required: true, message: '出版社不能为空', trigger: 'blur' }],
-        bookYear: [{ required: true, message: '年份不能为空', trigger: 'blur' }],
-        lecturer: [{ required: true, message: '版次不能为空', trigger: 'blur' }],
-        bookVersion: [{ required: true, message: '教材类型不能为空', trigger: 'blur' }],
-        bookType: [{ required: true, message: '授课老师不能为空', trigger: 'blur' }],
+        lecturer: [{ required: true, message: '授课老师不能为空', trigger: 'blur' }],
+        bookVersion: [{ required: true, message: '版本不能为空', trigger: 'blur' }],
+        bookType: [{ required: true, message: '教材类型不能为空', trigger: 'blur' }],
         tel: [
           { required: true, message: '电话不能为空', trigger: 'blur' },
           { pattern: /^1(?:3\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\d|9\d)\d{8}$/, message: '号码格式错误' }
@@ -381,6 +386,12 @@ export default {
     })
     getSelectorList('staffRooms').then(res => {
       this.staffRooms = res.data
+    })
+    getSelectorList('bookYears').then(res => {
+      this.bookYears = res.data
+    })
+    getSelectorList('bookVersions').then(res => {
+      this.bookVersions = res.data
     })
   },
   methods: {

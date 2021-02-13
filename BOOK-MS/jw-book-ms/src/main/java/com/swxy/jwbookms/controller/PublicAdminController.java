@@ -56,6 +56,10 @@ public class PublicAdminController {
         selectorSet.add("bookTypes");
         // 教研室
         selectorSet.add("staffRooms");
+        // 年份
+        selectorSet.add("bookYears");
+        // 版次
+        selectorSet.add("bookVersions");
     }
 
     // ======================================= 学期管理 =========================================

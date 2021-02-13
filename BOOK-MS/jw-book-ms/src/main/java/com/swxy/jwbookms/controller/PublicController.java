@@ -5,6 +5,7 @@ import com.swxy.jwbookms.common.response.ResponseUtil;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.enums.RedisKey;
 import com.swxy.jwbookms.pojo.PublishingHouse;
+import com.swxy.jwbookms.pojo.VO.XqidTimeVo;
 import com.swxy.jwbookms.service.BookTotalService;
 import com.swxy.jwbookms.service.PublishingHouseService;
 import com.swxy.jwbookms.service.impl.CommonService;
@@ -12,15 +13,18 @@ import com.swxy.jwbookms.util.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * 公共资源获取类
@@ -54,7 +58,11 @@ public class PublicController {
     @GetMapping("/selects/{str}")
     public Response getSelects(@PathVariable String str) {
         Set<Object> objects = redisUtil.sGet(str);
-        return new DataResponseResult<>(objects);
+        TreeSet<String> strings = new TreeSet<>();
+        objects.forEach(e -> {
+            strings.add(e.toString());
+        });
+        return new DataResponseResult<>(strings);
     }
 
     @ApiOperation("获取总表的所有选择值")
@@ -69,6 +77,19 @@ public class PublicController {
     public Response putPublishingHouse() {
         List<PublishingHouse> list = publishingHouseService.list();
         return ResponseUtil.toResult(list, list.size());
+    }
+
+    @GetMapping("/FillTimel/{xqid}")
+    @ApiOperation(value = "获取当前学期填报的开启时间与结束时间")
+    public Response getFillTimel(@PathVariable String xqid) {
+        String strTime = (String)redisUtil.get(xqid + RedisKey.XQID_Time);
+        if (StringUtils.isEmpty(strTime)){
+            return new DataResponseResult<>(XqidTimeVo.builder().isFill(false).build());
+        }
+        String[] split = strTime.split("-");
+        LocalDateTime startTime = LocalDateTime.parse(split[0]);
+        LocalDateTime endTime = LocalDateTime.parse(split[1]);
+        return new DataResponseResult<>(XqidTimeVo.builder().startTime(startTime).endTime(endTime).isFill(true));
     }
 
 }

@@ -158,7 +158,6 @@
       this.fetchData()
     },
     fetchData() {
-      this.listLoading = true
       getBookTotalList(this.page.current, this.page.size, this.searchData).then(response => {
         this.list = response.data.records
         this.page.current = response.data.current
