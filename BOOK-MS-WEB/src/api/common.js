@@ -84,3 +84,12 @@ export function getFillTime() {
     method: 'get'
   })
 }
+
+// 获取当前学期填报时间信息
+export function getCountAll() {
+  const url = `/public/dbCount/all/${xqid}`
+  return request({
+    url: url,
+    method: 'get'
+  })
+}

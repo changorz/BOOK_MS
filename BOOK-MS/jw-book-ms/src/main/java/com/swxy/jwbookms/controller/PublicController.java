@@ -1,17 +1,19 @@
 package com.swxy.jwbookms.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.swxy.jwbookms.common.response.Response;
 import com.swxy.jwbookms.common.response.ResponseUtil;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.enums.RedisKey;
-import com.swxy.jwbookms.pojo.PublishingHouse;
+import com.swxy.jwbookms.pojo.*;
+import com.swxy.jwbookms.pojo.VO.CountVo;
 import com.swxy.jwbookms.pojo.VO.XqidTimeVo;
-import com.swxy.jwbookms.service.BookTotalService;
-import com.swxy.jwbookms.service.PublishingHouseService;
+import com.swxy.jwbookms.service.*;
 import com.swxy.jwbookms.service.impl.CommonService;
 import com.swxy.jwbookms.util.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +38,16 @@ import java.util.TreeSet;
 @Slf4j
 @RestController
 @RequestMapping("/public")
+@RequiredArgsConstructor
 public class PublicController {
 
-    @Autowired
-    private CommonService commonService;
-    @Autowired
-    private RedisUtil redisUtil;
-    @Autowired
-    private BookTotalService bookTotalService;
-    @Autowired
-    private PublishingHouseService publishingHouseService;
+    private final CommonService commonService;
+    private final RedisUtil redisUtil;
+    private final BookTotalService bookTotalService;
+    private final PublishingHouseService publishingHouseService;
+    private final BookStoreService bookStoreService;
+    private final CurriculumPlanService curriculumPlanService;
+    private final StudentInfoService studentInfoService;
 
     // 获取学期信息：user
     @ApiOperation("获取学期信息")
@@ -91,5 +93,30 @@ public class PublicController {
         LocalDateTime endTime = LocalDateTime.parse(split[1]);
         return new DataResponseResult<>(XqidTimeVo.builder().startTime(startTime).endTime(endTime).isFill(true));
     }
+
+    @GetMapping("/dbCount/all/{xqid}")
+    @ApiOperation(value = "获取当前学期填报的统计信息")
+    public Response getCount(@PathVariable String xqid) {
+        int bookStoreCount = bookStoreService.count(new LambdaQueryWrapper<BookStore>().eq(BookStore::getXqid, xqid));
+        int curriculumPlanCount = curriculumPlanService.count(new LambdaQueryWrapper<CurriculumPlan>().eq(CurriculumPlan::getXqid, xqid));
+        int studentInfoCount = studentInfoService.count(new LambdaQueryWrapper<StudentInfo>().eq(StudentInfo::getXqid, xqid));
+        //0：未填报 （默认）
+        //1：已填报，
+        //2： 被打回
+        // TODO 其实这里可以一次性查出
+        int bookTotalCount_0 = bookTotalService.count(new LambdaQueryWrapper<BookTotal>().eq(BookTotal::getXqid, xqid).eq(BookTotal::getSubmitState, 0));
+        int bookTotalCount_1 = bookTotalService.count(new LambdaQueryWrapper<BookTotal>().eq(BookTotal::getXqid, xqid).eq(BookTotal::getSubmitState, 1));
+        int bookTotalCount_2 = bookTotalService.count(new LambdaQueryWrapper<BookTotal>().eq(BookTotal::getXqid, xqid).eq(BookTotal::getSubmitState, 2));
+        CountVo build = CountVo.builder()
+                .bookStoreCount(bookStoreCount)
+                .curriculumPlanCount(curriculumPlanCount)
+                .studentInfoCount(studentInfoCount)
+                .bookTotalCount_0(bookTotalCount_0)
+                .bookTotalCount_1(bookTotalCount_1)
+                .bookTotalCount_2(bookTotalCount_2)
+                .build();
+        return new DataResponseResult<>(build);
+    }
+
 
 }
