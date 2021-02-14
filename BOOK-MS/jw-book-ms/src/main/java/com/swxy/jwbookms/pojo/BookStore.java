@@ -54,6 +54,7 @@ public class BookStore implements Serializable {
     private String bookName;
 
     @JsonIgnore
+    @ExcelIgnore
     @ApiModelProperty(value = "书名拼音码", hidden = true)
     private String bookPym;
 

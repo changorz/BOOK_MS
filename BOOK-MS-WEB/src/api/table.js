@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import store from '@/store'
+import qs from 'qs'
 
 const xqid = store.getters.activeXqid
 
@@ -209,6 +210,15 @@ export function getBookTotalList(pageStart, pageSize, search, data) {
     url: url,
     method: 'get',
     params: data
+  })
+}
+
+// 通过开课计划 生成 总表数据
+export function createBookTota(data) {
+  return request({
+    url: `/admin/BookTotal/insertBookTotalByCurriclumPlan/${xqid}`,
+    method: 'post',
+    data: qs.stringify(data)
   })
 }
 

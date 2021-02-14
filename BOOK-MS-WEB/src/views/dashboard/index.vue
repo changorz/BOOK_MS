@@ -1,12 +1,12 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <div class="dashboard-text">欢迎您: {{ name }}</div>
     <div>
       <el-row :gutter="40" class="panel-group">
         <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
           <div class="card-panel">
             <div class="card-panel-icon-wrapper icon-people">
-              <svg-icon icon-class="peoples" class-name="card-panel-icon" />
+              <svg-icon icon-class="BookStore " class-name="card-panel-icon" />
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">
@@ -19,7 +19,7 @@
         <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
           <div class="card-panel">
             <div class="card-panel-icon-wrapper icon-message">
-              <svg-icon icon-class="message" class-name="card-panel-icon" />
+              <svg-icon icon-class="CurriculumPlan" class-name="card-panel-icon" />
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">
@@ -32,7 +32,7 @@
         <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
           <div class="card-panel">
             <div class="card-panel-icon-wrapper icon-money">
-              <svg-icon icon-class="money" class-name="card-panel-icon" />
+              <svg-icon icon-class="StudentInfo" class-name="card-panel-icon" />
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">
@@ -45,13 +45,14 @@
         <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
           <div class="card-panel">
             <div class="card-panel-icon-wrapper icon-shopping">
-              <svg-icon icon-class="shopping" class-name="card-panel-icon" />
+              <svg-icon icon-class="BookTotal" class-name="card-panel-icon" />
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">
-                Shoppings
+                填报
               </div>
-              <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+              <count-to :start-val="0" :end-val="Number.parseInt(count.bookTotalCount_1) +Number.parseInt(count.bookTotalCount_2)" :duration="3600" class="card-panel-num" />
+              <h2 style="display: inline-block">/{{Number.parseInt(count.bookTotalCount_0) + Number.parseInt(count.bookTotalCount_1) +Number.parseInt(count.bookTotalCount_2) }}</h2>
             </div>
           </div>
         </el-col>
@@ -125,10 +126,6 @@ export default {
     .card-panel-col {
       margin-bottom: 32px;
     }
-
-
-
-
     .card-panel {
       height: 108px;
       cursor: pointer;

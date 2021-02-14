@@ -40,6 +40,9 @@ public class RedisConfig {
         // redis hash value 序列化方式使用jackson
         template.setHashValueSerializer(jacksonSeial);
         template.afterPropertiesSet();
+        // 开启事务
+//        template.setEnableTransactionSupport(true);
+
         return template;
     }
 

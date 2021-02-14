@@ -3,26 +3,35 @@ package com.swxy.jwbookms.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.swxy.jwbookms.common.exception.ExceptionCast;
 import com.swxy.jwbookms.common.response.Response;
 import com.swxy.jwbookms.common.response.ResponseResult;
 import com.swxy.jwbookms.common.response.ResponseUtil;
+import com.swxy.jwbookms.common.response.code.CommonCode;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
+import com.swxy.jwbookms.enums.RedisKey;
 import com.swxy.jwbookms.pojo.BookTotal;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
 import com.swxy.jwbookms.service.BookTotalService;
 import com.swxy.jwbookms.service.impl.CommonService;
 import com.swxy.jwbookms.enums.CommonStringEnum;
+import com.swxy.jwbookms.util.AssertUtil;
+import com.swxy.jwbookms.util.BMSUtil;
+import com.swxy.jwbookms.util.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +52,8 @@ public class BookTotalController {
     private BookTotalService bookTotalService;
     @Autowired
     private CommonService commonService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     @PostMapping("/BookTotal")
     @ApiOperation(value = "填报一条记录")
@@ -74,12 +85,25 @@ public class BookTotalController {
     }
 
 
+    @Transactional
     @ApiOperation(value = "按开课计划和学期id去生成总表")
     @PostMapping("/BookTotal/insertBookTotalByCurriclumPlan/{xqid}")
-    public Response insertBookTotalByCurriclumPlan(@PathVariable String xqid) {
+    public Response insertBookTotalByCurriclumPlan(@PathVariable String xqid, @RequestParam String startTime, @RequestParam String endTime) {
+        // 校验xqid 和 时间
+        AssertUtil.isXqid(xqid);
+        try {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime.parse(startTime, dateTimeFormatter);
+            LocalDateTime.parse(endTime, dateTimeFormatter);
+        }catch (Exception e){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        // 存入到redis
+        redisUtil.set((xqid + RedisKey.XQID_Time.getValue()), startTime + '=' + endTime );
+        // 创建数据
         int i = bookTotalService.insertBookTotalByCurriclumPlan(xqid);
         String successMsg = "操作成功，更新行数：" + i;
-        String failMsg = "操作失败，可能表中以存在记录:" + "[" + i + "]";
+        String failMsg = "操作失败，影响行数: " + i;
         return ResponseUtil.toResult(i > 0, successMsg, failMsg);
     }
 
@@ -111,10 +135,6 @@ public class BookTotalController {
      */
     @GetMapping("/BookTotal/findBookTotalByTitle/{xqid}/{str}/{current}/{size}")
     @ApiOperation(value = "按学期id和课程名称分页查询 总表 map为过滤条件")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "current", value = "起始也", required = false, paramType = "path"),
-            @ApiImplicitParam(name = "size", value = "页大小", required = false, paramType = "path")
-    })
     public Response queryBookTotalByMap(
             @PathVariable String xqid,
             @PathVariable String str,

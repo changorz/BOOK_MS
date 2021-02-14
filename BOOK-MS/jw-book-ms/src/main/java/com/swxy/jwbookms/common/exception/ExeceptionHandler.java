@@ -11,6 +11,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -76,6 +77,7 @@ public class ExeceptionHandler {
         builder.put(ExcelCommonException.class, CommonCode.Excel_Common_Exception);
         builder.put(HttpRequestMethodNotSupportedException.class, CommonCode.HttpRequest_Method_Not_Supported_Exception);
         builder.put(DuplicateKeyException.class, CommonCode.DuplicateKeyException);
+        builder.put(MissingServletRequestParameterException.class, CommonCode.INVALID_PARAM);
 
         builder.put(IOException.class, CommonCode.FILE_IO_Exception);
     }

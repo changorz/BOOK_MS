@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -55,21 +56,21 @@ public class BookTotalServiceImpl extends ServiceImpl<BookTotalMapper, BookTotal
                 .groupBy(BookTotal::getGrade)
                 .select(BookTotal::getGrade)
         );
-        List<String> grades = grade.stream().map(BookTotal::getGrade).collect(Collectors.toList());
+        List<String> grades = grade.stream().filter(Objects::nonNull).map(BookTotal::getGrade).collect(Collectors.toList());
 
         List<BookTotal> major = bookTotalMapper.selectList(new LambdaQueryWrapper<BookTotal>()
                 .eq(BookTotal::getXqid, xqid)
                 .groupBy(BookTotal::getMajor)
                 .select(BookTotal::getMajor)
         );
-        List<String> majors = major.stream().map(BookTotal::getMajor).collect(Collectors.toList());
+        List<String> majors = major.stream().filter(Objects::nonNull).map(BookTotal::getMajor).collect(Collectors.toList());
 
         List<BookTotal> twoLevelCollege = bookTotalMapper.selectList(new LambdaQueryWrapper<BookTotal>()
                 .eq(BookTotal::getXqid, xqid)
                 .groupBy(BookTotal::getTwoLevelCollege)
                 .select(BookTotal::getTwoLevelCollege)
         );
-        List<String> twoLevelColleges = twoLevelCollege.stream().map(BookTotal::getTwoLevelCollege).collect(Collectors.toList());
+        List<String> twoLevelColleges = twoLevelCollege.stream().filter(Objects::nonNull).map(BookTotal::getTwoLevelCollege).collect(Collectors.toList());
         HashMap<String, List> map = new HashMap<>();
         map.put("bookTotal_grades", grades);
         map.put("bookTotal_majors", majors);

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -84,14 +85,15 @@ public class PublicController {
     @GetMapping("/FillTimel/{xqid}")
     @ApiOperation(value = "获取当前学期填报的开启时间与结束时间")
     public Response getFillTimel(@PathVariable String xqid) {
-        String strTime = (String)redisUtil.get(xqid + RedisKey.XQID_Time);
+        String strTime = (String)redisUtil.get(xqid + RedisKey.XQID_Time.getValue());
         if (StringUtils.isEmpty(strTime)){
             return new DataResponseResult<>(XqidTimeVo.builder().isFill(false).build());
         }
-        String[] split = strTime.split("-");
-        LocalDateTime startTime = LocalDateTime.parse(split[0]);
-        LocalDateTime endTime = LocalDateTime.parse(split[1]);
-        return new DataResponseResult<>(XqidTimeVo.builder().startTime(startTime).endTime(endTime).isFill(true));
+        String[] split = strTime.split("=");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startTime = LocalDateTime.parse(split[0], dateTimeFormatter);
+        LocalDateTime endTime = LocalDateTime.parse(split[1], dateTimeFormatter);
+        return new DataResponseResult<>(XqidTimeVo.builder().startTime(startTime).endTime(endTime).isFill(true).build());
     }
 
     @GetMapping("/dbCount/all/{xqid}")

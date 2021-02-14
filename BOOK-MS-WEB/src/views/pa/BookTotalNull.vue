@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { createBookTota } from '@/api/table'
 export default {
   name: 'BookTotalNull',
   data() {
@@ -46,11 +47,15 @@ export default {
           '学生表 ' +
           '已经全部导入再提交！</p>',
         onOk: () => {
-          console.log(this.xqidTime)
-          this.$Message.info('Clicked ok')
-        },
-        onCancel: () => {
-          this.$Message.info('Clicked cancel')
+          const data = {
+            startTime: this.xqidTime[0],
+            endTime: this.xqidTime[1]
+          }
+          console.log(data)
+          createBookTota(data).then(res => {
+            this.$Message.success('开启成功')
+            this.$router.push('/PA/BookTotal')
+          })
         }
       })
     }
