@@ -112,6 +112,7 @@ public class BookTotal implements Serializable {
 
     @NotNull(message = "cooperativePublishingHouse: 参数不能为空,默认true。")
     @ApiModelProperty(value = "是否是合作出版社")
+    @ExcelIgnore
     private boolean cooperativePublishingHouse;
 
     @ExcelProperty(value = "所属教研室")
@@ -187,7 +188,7 @@ public class BookTotal implements Serializable {
 
     @NotBlank(message = "xqid: 参数不能为空。")
     @Pattern(regexp = "20[0-9]{2}-20[0-9]{2}-[0-9]", message = "xqid: 参数错误。 示例: 2020-2021-1")
-    @ExcelProperty("学期ID")
+    @ExcelIgnore
     @ApiModelProperty(value = "学期ID")
     private String xqid;
 

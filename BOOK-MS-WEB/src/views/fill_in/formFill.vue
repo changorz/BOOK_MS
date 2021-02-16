@@ -270,7 +270,7 @@
 <script>
 import { getBookOne, getBookStoreListTop10, getFillInfo, postBookTotal } from '@/api/fill'
 import { copyBean } from '@/utils/bmsUtil'
-import { getPublishingHousePublic, getSelectorList } from '@/api/common'
+import { getFillTime, getPublishingHousePublic, getSelectorList } from '@/api/common'
 
 export default {
   data() {
@@ -357,6 +357,21 @@ export default {
     }
   },
   created() {
+    // 检验是否开启填报
+    getFillTime().then(res => {
+      this.fillTime = res.data
+      if (new Date().getTime() > new Date(this.fillTime.endTime).getTime()) {
+        this.fillTime.status = 2
+      } else if (new Date().getTime() > new Date(this.fillTime.startTime).getTime()) {
+        this.fillTime.status = 1
+      } else {
+        this.fillTime.status = 0
+      }
+      if (!res.data.isFill || this.fillTime.status !== 1) {
+        this.$router.push('/fill/StatusFail')
+      }
+    })
+    // 初始化表单
     getFillInfo(this.$route.params.uuid).then(res => {
       this.info = res.data
       // 设置班级选项，并且默认全选

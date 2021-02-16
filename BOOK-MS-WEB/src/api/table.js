@@ -203,9 +203,7 @@ export function importStudentInfoByExcel(data) {
 
 // 获取书籍库书籍列表
 export function getBookTotalList(pageStart, pageSize, search, data) {
-  const url = search === ''
-    ? `/admin/BookTotal/all/${xqid}/${pageStart}/${pageSize}`
-    : `/admin/BookTotal/findBookTotalByTitle/${xqid}/${search}/${pageStart}/${pageSize}`
+  const url = `/admin/BookTotal/all/${xqid}/${pageStart}/${pageSize}`
   return request({
     url: url,
     method: 'get',
@@ -219,6 +217,25 @@ export function createBookTota(data) {
     url: `/admin/BookTotal/insertBookTotalByCurriclumPlan/${xqid}`,
     method: 'post',
     data: qs.stringify(data)
+  })
+}
+
+// 修改填报的日期
+export function changeTime(data) {
+  return request({
+    url: `/admin/BookTotal/changeTime/${xqid}`,
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 下载填报总Excel
+export function downloadFillExcel() {
+  const url = `/admin/BookTotal/download/${xqid}`
+  return request({
+    url: url,
+    method: 'get',
+    responseType: 'blob'
   })
 }
 

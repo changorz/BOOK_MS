@@ -51,10 +51,10 @@
 </template>
 
 <script>
-  import { getBookTotalList } from '@/api/fill'
-  import { getselectsAllByBookTota } from '@/api/common'
+import { getBookTotalList } from '@/api/fill'
+import { getFillTime, getselectsAllByBookTota } from '@/api/common'
 
-  export default {
+export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -129,6 +129,20 @@
     }
   },
   created() {
+    // 检验是否开启填报
+    getFillTime().then(res => {
+      this.fillTime = res.data
+      if (new Date().getTime() > new Date(this.fillTime.endTime).getTime()) {
+        this.fillTime.status = 2
+      } else if (new Date().getTime() > new Date(this.fillTime.startTime).getTime()) {
+        this.fillTime.status = 1
+      } else {
+        this.fillTime.status = 0
+      }
+      if (!res.data.isFill || this.fillTime.status !== 1) {
+        this.$router.push('/fill/StatusFail')
+      }
+    })
     this.fetchData()
     // 获取选择列表值
     getselectsAllByBookTota().then(res => {
@@ -176,7 +190,7 @@
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .ivu-page {
     text-align: center;
     padding-top: 30px;

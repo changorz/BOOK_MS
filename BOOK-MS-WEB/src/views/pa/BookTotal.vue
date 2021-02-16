@@ -3,26 +3,111 @@
     <div>
       <label style="font-size: 25px;">{{ this.$route.meta.title }}</label>
     </div>
+    <div class="top-circle">
+      <el-row>
+        <el-col :sm="3">
+          <i-circle
+            :size="120"
+            :trail-width="4"
+            :stroke-width="5"
+            :percent="circleValue"
+            stroke-linecap="square"
+            stroke-color="#43a3fb"
+          >
+            <div class="demo-Circle-custom">
+              <h1>4256</h1>
+              <p>填报总数</p>
+              <span>
+                填报比例
+                <i>{{ circleValue }}%</i>
+              </span>
+            </div>
+          </i-circle>
+        </el-col>
+        <el-col :sm="4">
+          <div style="font-size: 10px">
+            <span class="expand-key">填报打回: </span>
+            <span class="expand-value">
+              <Tag color="volcano">{{ count.bookTotalCount_2 }}</Tag>
+            </span><br>
+            <span class="expand-key">有效填报: </span>
+            <span class="expand-value">
+              <Tag color="green">{{ count.bookTotalCount_1 }}</Tag>
+            </span><br>
+            <span class="expand-key">填报总数: </span>
+            <span class="expand-value">
+              <Tag color="purple">{{ Number.parseInt(count.bookTotalCount_0) + Number.parseInt(count.bookTotalCount_1) +Number.parseInt(count.bookTotalCount_2) }}</Tag>
+            </span><br>
+          </div>
+        </el-col>
+        <el-col :sm="10">
+          <div style="font-size: 10px">
+            <span class="expand-key">是否设置: </span>
+            <span class="expand-value">
+              <Tag color="green" v-if="fillTime.isFill"> 已设置</Tag>
+              <Tag color="volcano" v-if="!fillTime.isFill"> 未开启</Tag>
+            </span><br>
+            <span class="expand-key">开启时间: </span>
+            <span class="expand-value">
+              <Time :time="fillTime.startTime" type="datetime" />&nbsp;
+              <router-link :to="{ name: 'TimeChange', params: { startTime: fillTime.startTime,  endTime: fillTime.endTime }}">修改</router-link>
+            </span><br>
+            <span class="expand-key">结束时间: </span>
+            <span class="expand-value">
+              <Time :time="fillTime.endTime" type="datetime" />
+            </span><br>
+            <span class="expand-key">倒计时: </span>
+            <span class="expand-value">
+               <Tag color="lime" v-if="fillTime.status === 0"><Time :time="fillTime.startTime"/>开启</Tag>
+               <Tag color="orange" v-if="fillTime.status === 1"><Time :time="fillTime.endTime"/>结束</Tag>
+              <Tag color="error" v-if="fillTime.status === 2">已结束</Tag>
+            </span><br>
+          </div>
+        </el-col>
+        <el-col :sm="3" />
+      </el-row>
+    </div>
     <div class="input_top">
-      <Input v-model="search" placeholder="搜索书籍" style="width: auto;" @keyup.enter.native="onSearch" />
-      <Button type="info" @click="onSearch">搜索</Button>
-      <div style="float: right; margin-right: 20px">
-        <Button @click="uploadModal = true">excel上传</Button>
-        <Button type="success" @click="addDrawer = true">新增</Button>
-        <Button type="primary" @click="updataBut">修改</Button>
-        <Button type="warning" @click="deleteObj">删除</Button>
-        <Button type="error" @click="deleteXqAll = true">学期数据删除</Button>
+      <div style="display: inline-block">
+        <label>学院：</label>
+        <Select v-model="searchData.twoLevelCollege" style="width:150px">
+          <Option v-for="(val, ind) in twoLevelColleges" :key="ind" :value="val">{{ val }}</Option>
+        </Select>
       </div>
+      <div style="display: inline-block; margin-left: 20px">
+        <label>年级：</label>
+        <Select v-model="searchData.grade" style="width:150px">
+          <Option v-for="(val, ind) in grades" :key="ind" :value="val">{{ val }}</Option>
+        </Select>
+      </div>
+      <div style="display: inline-block; margin-left: 20px">
+        <label>专业：</label>
+        <Select v-model="searchData.major" style="width:150px">
+          <Option v-for="(val, ind) in majors" :key="ind" :value="val">{{ val }}</Option>
+        </Select>
+      </div>
+      <div style="display: inline-block; margin-left: 20px">
+        <label>状态：</label>
+        <Select v-model="searchData.submitState" style="width:150px">
+          <Option v-for="(val, ind) in submitStates" :key="ind" :value="val.value">{{ val.name }}</Option>
+        </Select>
+      </div>
+      <Button type="success" @click="onSearch">查询</Button>
+      <Button type="primary" @click="onReset">重置</Button>
+      <Button type="primary" @click="downloadExcel">下载填报总表</Button>
     </div>
     <Table
       :columns="columns"
       :data="list"
       :loading="listLoading"
-      highlight-row
       @on-current-change="onCurrentChange"
     >
       <template slot="submitState" slot-scope="{ row }">
         <el-tag :type="row.submitState | statusFilter">{{ row.submitState | formatStata }}</el-tag>
+      </template>
+      <template slot="action" slot-scope="{ row, index }">
+        <Button size="small" type="info" style="margin-right: 5px" @click="add(row)">修改</Button>
+        <Button size="small" type="error">打回</Button>
       </template>
     </Table>
     <Page
@@ -34,65 +119,16 @@
       @on-change="currentChange"
       @on-page-size-change="pageSizeChange"
     />
-    <Modal v-model="deleteXqAll" width="360">
-      <p slot="header" style="color:#f60; text-align:center">
-        <Icon type="ios-information-circle" />
-        <span>删除确认</span>
-      </p>
-      <div style="text-align:center">
-        <p>{{ this.$store.getters.activeXqidValue }}的数据将会全部删除，无法恢复。</p>
-        <p>是否继续删除？</p>
-      </div>
-      <div slot="footer">
-        <Button :loading="modal_loading" long size="large" type="error" @click="deleteAll">删除</Button>
-      </div>
-    </Modal>
-    <Modal
-      v-model="uploadModal"
-      :loading="uploadLoading"
-      :styles="{top: '180px'}"
-      ok-text="上传"
-      title="Excel导入"
-      @on-ok="fileload"
-    >
-      <div>表中必要字段：
-        <el-link type="success">ISBN</el-link>,
-        <el-link type="success">书名</el-link>,
-        <el-link type="success">出版社全称</el-link>,
-        <el-link type="success">作者</el-link>,
-        <el-link type="success">定价</el-link>
-      </div>
-      <div style="margin: 5px 0 10px 0px">表中选填字段：
-        <el-link type="warning">出版社补充</el-link>
-      </div>
-      <Upload
-        :before-upload="handleUpload"
-        :format="['xlsx','xls']"
-        action=""
-        type="drag"
-      >
-        <div style="padding: 20px 0">
-          <Icon size="52" style="color: #3399ff" type="ios-cloud-upload" />
-          <p>请选择正确的Excel文件</p>
-        </div>
-      </Upload>
-      <div v-if="file !== null" style="padding: 10px 0 0 10px">上传文件: <p style="color: deeppink; display: inline-block">
-        {{ file.name }}</p></div>
-    </Modal>
   </div>
 </template>
 
 <script>
 import {
-  addBookStore,
-  deleteBookStore,
-  deleteBookStoreAllByXqid,
-  getBookTotalList,
-  importBookStoreByExcel,
-  putBookStore
+  getBookTotalList
 } from '@/api/table'
-import { getFillTime } from '@/api/common'
-import { clearObject } from '@/utils/bmsUtil'
+import { getCountAll, getFillTime, getselectsAllByBookTota } from '@/api/common'
+import { downloadFillExcel } from '@/api/table'
+import { convertRes2Blob } from '@/utils/bmsUtil'
 import expandRow from './table-expand.vue'
 
 export default {
@@ -120,18 +156,30 @@ export default {
   },
   data() {
     return {
-      // 按学期删除
-      deleteXqAll: false,
-      modal_loading: false,
-      // 文件上传组件
-      uploadModal: false,
-      uploadLoading: true,
-      file: '',
+      searchData: {
+        grade: '',
+        major: '',
+        twoLevelCollege: '',
+        submitState: ''
+      },
+      circleValue: 0,
+      count: {
+        bookStoreCount: 0,
+        bookTotalCount_0: 0,
+        bookTotalCount_1: 0,
+        bookTotalCount_2: 0,
+        curriculumPlanCount: 0,
+        studentInfoCount: 0
+      },
+      fillTime: {
+        endTime: '0',
+        isFill: true,
+        startTime: '0',
+        // 未开始，进行中， 已结束
+        status: 0
+      },
       // 表格加载动画
       listLoading: true,
-      // 抽屉控制
-      drawer: false,
-      addDrawer: false,
       search: '',
       addData: {
         author: null,
@@ -266,6 +314,12 @@ export default {
           title: '填报状态',
           slot: 'submitState',
           align: 'center'
+        },
+        {
+          title: '操作',
+          slot: 'action',
+          width: 150,
+          align: 'center'
         }
       ],
       page: {
@@ -273,7 +327,16 @@ export default {
         size: 10,
         total: 1
       },
-      pageOpts: [10, 20, 50, 100]
+      pageOpts: [10, 20, 50, 100],
+      // 下拉列表值
+      grades: [],
+      majors: [],
+      twoLevelColleges: [],
+      submitStates: [
+        { value: '0', name: '未填报' },
+        { value: '1', name: '已填报' },
+        { value: '2', name: '打回' }
+      ]
     }
   },
   created() {
@@ -283,104 +346,50 @@ export default {
         this.warning(false)
         this.$router.push('/PA/BookTotalNull')
       }
+      this.fillTime = res.data
+      if (new Date().getTime() > new Date(this.fillTime.endTime).getTime()) {
+        this.fillTime.status = 2
+      } else if (new Date().getTime() > new Date(this.fillTime.startTime).getTime()) {
+        this.fillTime.status = 1
+      } else {
+        this.fillTime.status = 0
+      }
     })
     this.fetchData()
+    // count 获取
+    getCountAll().then(res => {
+      this.count = res.data
+      this.circleValue = (Number.parseInt(this.count.bookTotalCount_1) + Number.parseInt(this.count.bookTotalCount_2)) / (Number.parseInt(this.count.bookTotalCount_0) + Number.parseInt(this.count.bookTotalCount_1) + Number.parseInt(this.count.bookTotalCount_2))
+      this.circleValue = Number.parseFloat(this.circleValue) * 100
+      if (this.circleValue > 0 && this.circleValue < 0.01) {
+        this.circleValue = 0.01
+      }
+      this.circleValue = Number.parseFloat(this.circleValue.toFixed(2))
+    })
+    // 获取选择列表值
+    getselectsAllByBookTota().then(res => {
+      this.grades = res.data.bookTotal_grades
+      this.majors = res.data.bookTotal_majors
+      this.twoLevelColleges = res.data.bookTotal_twoLevelColleges
+    })
   },
   methods: {
-    handleUpload(file) {
-      this.file = file
-      return false
-    },
-    async fileload() {
-      if (this.file === '') {
-        this.$Message.warning('未选择文件')
-        this.uploadModal = false
-        return
-      }
-      // 创建FormData对象
-      const param = new FormData()
-      // 将得到的文件流添加到FormData对象
-      param.append('file', this.file, this.file.name)
-      await importBookStoreByExcel(param).then(res => {
-        this.uploadModal = false
-        this.$Message.success('成功添加' + res.data.count + '条数据')
+    downloadExcel() {
+      downloadFillExcel().then(res => {
+        convertRes2Blob(res)
       })
-      this.uploadLoading = false
-      // 更新成功或刷新表格数据
-      await this.fetchData()
-    },
-    async deleteAll() {
-      this.modal_loading = true
-      await deleteBookStoreAllByXqid().then(res => {
-        clearObject(this.currentData)
-        this.modal_loading = false
-        this.deleteXqAll = false
-        this.$Message.success('删除成功。')
-      })
-      // 更新成功或刷新表格数据
-      await this.fetchData()
-    },
-    async addBook() {
-      await addBookStore(this.addData).then(res => {
-        clearObject(this.addData)
-        this.addDrawer = false
-        this.$Message.success('新增成功。')
-      })
-      // 更新成功或刷新表格数据
-      await this.fetchData()
-    },
-    updataBut() {
-      // 判断是否有数据选中
-      if (this.currentData.uuid === '') {
-        this.$Modal.warning({
-          title: '警告',
-          content: '未选中数据无法修改。'
-        })
-        return
-      }
-      this.drawer = true
-    },
-    async drawerCommit() {
-      await putBookStore(this.currentData).then(res => {
-        clearObject(this.currentData)
-        this.drawer = false
-        this.$Message.success('修改成功。')
-      })
-      // 更新成功或刷新表格数据
-      await this.fetchData()
     },
     onSearch() {
       this.page.current = 1
       this.fetchData()
     },
-    async deleteObj() {
-      // 判断是否有数据选中
-      if (this.currentData.uuid === '') {
-        this.$Modal.warning({
-          title: '警告',
-          content: '未选中数据无法修改。'
-        })
-        return
-      }
-      await this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // 确定删除
-        deleteBookStore(this.currentData.uuid).then(res => {
-          // 清除选择的数据
-          clearObject(this.currentData)
-          this.$Message.success('删除成功。')
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-      // 更新成功或刷新表格数据
-      await this.fetchData()
+    onReset() {
+      this.searchData.grade = ''
+      this.searchData.major = ''
+      this.searchData.twoLevelCollege = ''
+      this.searchData.submitState = ''
+      this.page.current = 1
+      this.fetchData()
     },
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentData = currentRow
@@ -395,15 +404,17 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      const data = {
-      }
-      getBookTotalList(this.page.current, this.page.size, this.search, data).then(response => {
+      getBookTotalList(this.page.current, this.page.size, this.search, this.searchData).then(response => {
         this.list = response.data.records
         this.page.current = response.data.current
         this.page.size = response.data.size
         this.page.total = response.data.total
         this.listLoading = false
       })
+    },
+    add(row) {
+      const uuid = row.uuid
+      this.$router.push({ name: 'formFill', params: { uuid }})
     },
     warning(nodesc) {
       this.$notify({
@@ -415,7 +426,7 @@ export default {
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .ivu-page {
     text-align: center;
     padding-top: 30px;
@@ -446,5 +457,44 @@ export default {
 
   .ivu-input {
     width: 200px;
+  }
+
+  .top-circle{
+    padding: 20px;
+    padding-left: 50px;
+    padding-bottom: 10px;
+  }
+
+  .demo-Circle-custom{
+    & h1{
+      color: #3f414d;
+      font-size: 14px;
+      font-weight: normal;
+    }
+    & p{
+      color: #657180;
+      font-size: 1%;
+      margin: 5px 0 8px;
+    }
+    & span{
+      display: block;
+      padding-top: 8px;
+      color: #657180;
+      font-size: 7px;
+      &:before{
+        content: '';
+        display: block;
+        width: 50px;
+        height: 1px;
+        margin: 0 auto;
+        background: #e0e3e6;
+        position: relative;
+        top: -15px;
+      };
+    }
+    & span i{
+      font-style: normal;
+      color: #3f414d;
+    }
   }
 </style>

@@ -39,7 +39,7 @@ public class BookTotalServiceImpl extends ServiceImpl<BookTotalMapper, BookTotal
 
     @Override
     public void queryBookTotalServiceByXqid(String xqid, Page page, Map<String, String> map) {
-        // TODO 自己写 这里需要填充 page (现在可以通过 年级，学院，专业 查找)
+        // TODO 自己写 这里需要填充 page (现在可以通过 年级，学院，专业 -填报状态 查找)
         List<BookTotal> bookTotals = bookTotalMapper.queryBookTotalByMap(xqid, map, page);
         page.setRecords(bookTotals);
     }

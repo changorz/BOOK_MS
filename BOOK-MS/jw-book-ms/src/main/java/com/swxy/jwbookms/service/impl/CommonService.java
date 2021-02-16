@@ -21,6 +21,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.*;
 
 @Slf4j
@@ -41,6 +42,10 @@ public class CommonService {
      * @param data
      */
     public void downloadExcel(Class<?> clsaa, String shellName, List<?> data) {
+        // 自定义的header
+        response.setHeader("requestType","file");
+        // 设置这个header 可见
+        response.setHeader("Access-Control-Expose-Headers", "requestType");
         try {
             ServletOutputStream out = response.getOutputStream();
             EasyExcel

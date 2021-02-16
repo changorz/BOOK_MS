@@ -38,6 +38,10 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+    // 文件过滤
+    if (response.headers.requesttype === 'file') {
+      return response
+    }
     const res = response.data
     if (!res.success) {
       Message({

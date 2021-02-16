@@ -107,6 +107,25 @@ public class BookTotalController {
         return ResponseUtil.toResult(i > 0, successMsg, failMsg);
     }
 
+    @Transactional
+    @ApiOperation(value = "修改填报时间")
+    @PostMapping("/BookTotal/changeTime/{xqid}")
+    public Response changeTime(@PathVariable String xqid, @RequestParam String startTime, @RequestParam String endTime) {
+        // 校验xqid 和 时间
+        AssertUtil.isXqid(xqid);
+        try {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime.parse(startTime, dateTimeFormatter);
+            LocalDateTime.parse(endTime, dateTimeFormatter);
+        }catch (Exception e){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        // 存入到redis
+        redisUtil.set((xqid + RedisKey.XQID_Time.getValue()), startTime + '=' + endTime );
+        return ResponseUtil.toResult(true);
+    }
+
+
     /**
      * 按学期id分页查询 总表
      * @param xqid
@@ -124,27 +143,6 @@ public class BookTotalController {
         bookTotalService.queryBookTotalServiceByXqid(xqid, page, map);
         return new DataResponseResult<Page>(page);
     }
-
-    /**
-     * 按课程名模糊分页查询（须选定学期）
-     *
-     * @param xqid 学期ID
-     * @param str  查询条件
-     * @param map  选择的查询条件，可以为空
-     * @return
-     */
-    @GetMapping("/BookTotal/findBookTotalByTitle/{xqid}/{str}/{current}/{size}")
-    @ApiOperation(value = "按学期id和课程名称分页查询 总表 map为过滤条件")
-    public Response queryBookTotalByMap(
-            @PathVariable String xqid,
-            @PathVariable String str,
-            Page page,
-            @RequestBody Map map
-    ) {
-        System.out.println(map);
-        return  null;
-    }
-
 
     @ApiOperation(value = "填报比例")
     @GetMapping("/BookTotal/getBookTotalCountVo/{xqid}")

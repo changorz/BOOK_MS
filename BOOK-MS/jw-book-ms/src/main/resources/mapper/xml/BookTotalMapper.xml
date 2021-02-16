@@ -40,6 +40,8 @@
             <if test="map.twoLevelCollege != null and map.twoLevelCollege != ''">AND two_level_college = #{map.twoLevelCollege}</if>
             <!-- 专业 -->
             <if test="map.major != null and map.major != ''">AND major = #{map.major}</if>
+            <!-- 状态 -->
+            <if test="map.submitState != null and map.submitState != ''">AND submit_state = #{map.submitState}</if>
         </where>
         order by grade, course_title, cla
     </select>

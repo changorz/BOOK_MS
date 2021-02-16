@@ -61,7 +61,8 @@ export const constantRoutes = [
     meta: { title: '填报管理', icon: 'table' },
     children: [
       { path: 'BookTotal', name: 'BookTotal', component: () => import('@/views/pa/BookTotal'), meta: { title: '填报总表管理', icon: 'BookTotal' }},
-      { path: 'BookTotalNull', name: 'BookTotalNull', component: () => import('@/views/pa/BookTotalNull'), meta: { title: '开启填报', icon: 'BookTotal' }}
+      { path: 'BookTotalNull', name: 'BookTotalNull', component: () => import('@/views/pa/BookTotalNull'), meta: { title: '开启填报', icon: 'BookTotal' }},
+      { path: 'TimeChange', name: 'TimeChange', component: () => import('@/views/pa/TimeChange'), meta: { title: '填报时间修改' }, hidden: true }
     ]
   },
   {
@@ -82,7 +83,8 @@ export const constantRoutes = [
     meta: { title: '填报模块', icon: 'form' },
     children: [
       { path: 'tableFill', name: 'tableFill', component: () => import('@/views/fill_in/tableFill'), meta: { title: '教材填报列表', icon: 'form' }},
-      { path: 'formFill/:uuid', name: 'formFill', component: () => import('@/views/fill_in/formFill'), meta: { title: '教材填报', icon: 'form' }, hidden: true }
+      { path: 'formFill/:uuid', name: 'formFill', component: () => import('@/views/fill_in/formFill'), meta: { title: '教材填报' }, hidden: true },
+      { path: 'StatusFail', name: 'StatusFail', component: () => import('@/views/fill_in/StatusFail'), meta: { title: '失败！' }, hidden: true }
     ]
   },
   // 404 page must be placed at the end !!!
