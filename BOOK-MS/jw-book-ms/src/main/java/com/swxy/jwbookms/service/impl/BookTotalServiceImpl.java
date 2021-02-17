@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.swxy.jwbookms.pojo.BookTotal;
 import com.swxy.jwbookms.mapper.BookTotalMapper;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
+import com.swxy.jwbookms.pojo.VO.ClaOrderVo;
 import com.swxy.jwbookms.service.BookTotalService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -76,5 +77,10 @@ public class BookTotalServiceImpl extends ServiceImpl<BookTotalMapper, BookTotal
         map.put("bookTotal_majors", majors);
         map.put("bookTotal_twoLevelColleges", twoLevelColleges);
         return map;
+    }
+
+    @Override
+    public List<ClaOrderVo> getClaOrder(String xqid, String claName) {
+        return bookTotalMapper.getClaOrder(xqid, claName);
     }
 }

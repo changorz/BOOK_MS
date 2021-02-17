@@ -12,6 +12,7 @@ import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.enums.RedisKey;
 import com.swxy.jwbookms.pojo.BookTotal;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
+import com.swxy.jwbookms.pojo.VO.ClaOrderVo;
 import com.swxy.jwbookms.service.BookTotalService;
 import com.swxy.jwbookms.service.impl.CommonService;
 import com.swxy.jwbookms.enums.CommonStringEnum;
@@ -161,5 +162,13 @@ public class BookTotalController {
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         commonService.downloadExcel(BookTotal.class, CommonStringEnum.Summary_Sheet.getStr(), list);
     }
+
+    @ApiOperation(value = "获取班级订单")
+    @GetMapping("/BookTotal/getClaOrder/{xqid}/{claName}")
+    public Response getClaOrder(@PathVariable String xqid, @PathVariable String claName){
+        List<ClaOrderVo> claOrder = bookTotalService.getClaOrder(xqid, claName);
+        return new DataResponseResult<>(claOrder);
+    }
+
 }
 

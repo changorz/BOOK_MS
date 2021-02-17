@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.swxy.jwbookms.pojo.BookTotal;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
+import com.swxy.jwbookms.pojo.VO.ClaOrderVo;
 
 import java.util.List;
 import java.util.Map;
@@ -26,4 +27,10 @@ public interface BookTotalService extends IService<BookTotal> {
 
     Map<String, List> getSelectAllByBookTotal(String xqid);
 
+    /**
+     * 获取班级的订单，即发放表
+     * @param xqid
+     * @param claName
+     */
+    List<ClaOrderVo> getClaOrder(String xqid, String claName);
 }
