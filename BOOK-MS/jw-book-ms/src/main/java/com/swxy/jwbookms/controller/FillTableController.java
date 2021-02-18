@@ -71,7 +71,7 @@ public class FillTableController {
     }
 
     @GetMapping("/BookTotal/{xqid}/{uuid}")
-    @ApiOperation(value = "按uuid查询同专业同课程报记录")
+    @ApiOperation(value = "按uuid查询同专业同课程报记录 ps:只有在没有值时才去计算人数")
     public Response getBookTotal(@PathVariable String xqid, @PathVariable String uuid) {
         BookTotal bookTotal = bookTotalService.getById(uuid);
         BookTotalFillVo bookTotalFillVo = new BookTotalFillVo();
@@ -120,13 +120,13 @@ public class FillTableController {
         BookStore bookStore = bookStoreService.getById(uuid);
         BookIsbnVO bookIsbnVO = new BookIsbnVO();
         BeanUtils.copyProperties(bookStore, bookIsbnVO);
-        // 远程获取信息
-        String url = "https://book.feelyou.top/isbn/" + bookStore.getIsbn();
-        System.out.println(url);
-        Map forObject = restTemplate.getForObject(url, Map.class);
-        // TODO 获取图片
-        bookIsbnVO.setCover_url((String) forObject.getOrDefault("cover_url", ""));
-        System.out.println((String) forObject.getOrDefault("cover_url", ""));
+//        // 远程获取信息
+//        String url = "https://book.feelyou.top/isbn/" + bookStore.getIsbn();
+//        System.out.println(url);
+//        Map forObject = restTemplate.getForObject(url, Map.class);
+//        // TODO 获取图片
+//        bookIsbnVO.setCover_url((String) forObject.getOrDefault("cover_url", ""));
+//        System.out.println((String) forObject.getOrDefault("cover_url", ""));
 
         return  new DataResponseResult(bookIsbnVO);
     }

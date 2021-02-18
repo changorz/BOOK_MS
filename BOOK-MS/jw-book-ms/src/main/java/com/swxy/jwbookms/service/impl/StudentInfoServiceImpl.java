@@ -33,4 +33,14 @@ public class StudentInfoServiceImpl extends ServiceImpl<StudentInfoMapper, Stude
         return studentInfoMapper.selectPage(page, where);
     }
 
+    @Override
+    public void getAllClasspath(String xqid, String query, Page page) {
+        LambdaQueryWrapper<StudentInfo> select = new LambdaQueryWrapper<StudentInfo>()
+                .eq(StudentInfo::getXqid, xqid)
+                .groupBy(StudentInfo::getCla)
+                .like(StudentInfo::getCla, query)
+                .select(StudentInfo::getCla);
+        studentInfoMapper.selectPage(page, select);
+    }
+
 }

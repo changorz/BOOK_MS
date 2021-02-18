@@ -5,6 +5,7 @@ import com.swxy.jwbookms.pojo.BookTotal;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
 import com.swxy.jwbookms.pojo.VO.ClaOrderVo;
+import com.swxy.jwbookms.pojo.DTO.PublishingHouseOrderDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -27,4 +28,6 @@ public interface BookTotalMapper extends BaseMapper<BookTotal> {
     List<BookTotal> queryBookTotalByMap(@Param("xqid") String xqid, @Param("map") Map map, @Param("page") Page page);
 
     List<ClaOrderVo> getClaOrder(String xqid, String claName);
+
+    List<PublishingHouseOrderDTO> getPublishingHouseOrder(String xqid, String phName, String phNames);
 }

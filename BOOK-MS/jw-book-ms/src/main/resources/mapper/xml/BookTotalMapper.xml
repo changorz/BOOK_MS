@@ -51,4 +51,30 @@
         FROM book_total ,(select @i:=0)t where cla = #{claName} and xqid = #{xqid}
         order by course_title
     </select>
+
+    <select id="getPublishingHouseOrder" resultType="com.swxy.jwbookms.pojo.DTO.PublishingHouseOrderDTO">
+        SELECT
+            isbn,
+            book_name,
+            publishing_house,
+            author,
+            pricing,
+            sum(total_book) as total_book,
+            sum(total_pricing) as total_pricing,
+            remark
+        FROM book_total
+        <where>
+            xqid = #{xqid} and publishing_house = #{phName}
+            <choose>
+                <when test="phNames == null and phNames == ''">
+                    AND publishing_house_supplement is null
+                </when>
+                <otherwise>
+                    AND publishing_house_supplement = #{phNames}
+                </otherwise>
+            </choose>
+
+        </where>
+        group by isbn
+    </select>
 </mapper>

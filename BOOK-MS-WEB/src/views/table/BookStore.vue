@@ -77,7 +77,7 @@
           <el-col :span="12">
             <FormItem label="出版社补充">
               <Select v-model="currentData.publishingHouseSupplement" style="width:200px">
-                <Option :key="ind" :value="val" v-for="(val, ind) in publishingHouseSupplements">{{ val }}</Option>
+                <Option v-for="(val, ind) in publishingHouseSupplements" :key="ind" :value="val">{{ val }}</Option>
                 <Option value="">空</Option>
               </Select>
             </FormItem>
@@ -135,7 +135,7 @@
           <el-col :span="12">
             <FormItem label="出版社补充">
               <Select v-model="addData.publishingHouseSupplement" style="width:200px">
-                <Option :key="ind" :value="val" v-for="(val, ind) in publishingHouseSupplements">{{ val }}</Option>
+                <Option v-for="(val, ind) in publishingHouseSupplements" :key="ind" :value="val">{{ val }}</Option>
                 <Option value="">空</Option>
               </Select>
             </FormItem>
@@ -200,19 +200,19 @@
 </template>
 
 <script>
-  import {
-    addBookStore,
-    deleteBookStore,
-    deleteBookStoreAllByXqid,
-    getBookStoreList,
-    getPublishingHouse,
-    importBookStoreByExcel,
-    putBookStore
-  } from '@/api/table'
-  import { clearObject } from '@/utils/bmsUtil'
-  import { getSelectorList } from '@/api/common'
+import {
+  addBookStore,
+  deleteBookStore,
+  deleteBookStoreAllByXqid,
+  getBookStoreList,
+  getPublishingHouse,
+  importBookStoreByExcel,
+  putBookStore
+} from '@/api/table'
+import { clearObject } from '@/utils/bmsUtil'
+import { getSelectorList } from '@/api/common'
 
-  export default {
+export default {
   filters: {
     statusFilter(status) {
       const statusMap = {

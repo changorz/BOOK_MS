@@ -23,4 +23,5 @@ public interface StudentInfoService extends IService<StudentInfo> {
      */
     Page queryStudentInfo(Page page, String xqid, String str);
 
+    void getAllClasspath(String xqid, String query, Page page);
 }

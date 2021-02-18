@@ -5,6 +5,7 @@ import com.swxy.jwbookms.pojo.BookTotal;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
 import com.swxy.jwbookms.pojo.VO.ClaOrderVo;
+import com.swxy.jwbookms.pojo.DTO.PublishingHouseOrderDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -33,4 +34,14 @@ public interface BookTotalService extends IService<BookTotal> {
      * @param claName
      */
     List<ClaOrderVo> getClaOrder(String xqid, String claName);
+
+    /**
+     * 获取订报单
+     * @param xqid
+     * @param phName 出版社名称
+     * @param phNames 出版社补充
+     * @return
+     */
+    List<PublishingHouseOrderDTO> getPublishingHouseOrder(String xqid, String phName, String phNames);
+
 }

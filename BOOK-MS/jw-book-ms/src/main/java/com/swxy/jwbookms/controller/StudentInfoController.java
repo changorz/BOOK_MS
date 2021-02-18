@@ -25,8 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -90,11 +92,12 @@ public class StudentInfoController {
         return ResponseUtil.toResult(list, ResponseUtil.Code.ORDINARY.getTotalCode());
     }
 
-    @GetMapping({"/StudentInfo/{xqid}/{cla}"})
+    @GetMapping({"/StudentInfo/List/{xqid}/{cla}"})
     @ApiOperation(value = "按学期ID和班级名称查询班级学生名单")
     public Response getCurriculumPlanClaByXqid(@PathVariable String xqid, @PathVariable String cla) {
         LambdaQueryWrapper<StudentInfo> eq = new LambdaQueryWrapper<StudentInfo>().eq(StudentInfo::getXqid, xqid).eq(StudentInfo::getCla, cla);
         List<StudentInfo> list = studentInfoService.list(eq);
+        list.sort(Comparator.comparing(StudentInfo::getXh));
         return ResponseUtil.toResult(list, list.size());
     }
 
@@ -142,6 +145,22 @@ public class StudentInfoController {
     ) {
         studentInfoService.queryStudentInfo(page, xqid, str);
         return new DataResponseResult<Page>(page);
+    }
+
+    @GetMapping("/StudentInfo/{xqid}/getAllClasspath")
+    @ApiOperation(value = "获取当前学期的所有班级")
+    public Response getAllClasspath(@PathVariable String xqid) {
+        LambdaQueryWrapper<StudentInfo> select = new LambdaQueryWrapper<StudentInfo>().eq(StudentInfo::getXqid, xqid).groupBy(StudentInfo::getCla).select(StudentInfo::getCla);
+        List<StudentInfo> list = studentInfoService.list(select);
+        List<String> collect = list.stream().map(StudentInfo::getCla).collect(Collectors.toList());
+        return new DataResponseResult<>(collect);
+    }
+
+    @GetMapping("/StudentInfo/{xqid}/{query}/getAllClasspath")
+    @ApiOperation(value = "获取当前学期的所有班级 - 分页")
+    public Response getAllClasspath(@PathVariable String xqid, @PathVariable String query, Page page) {
+        studentInfoService.getAllClasspath(xqid, query, page);
+        return new DataResponseResult<>(page);
     }
 
 

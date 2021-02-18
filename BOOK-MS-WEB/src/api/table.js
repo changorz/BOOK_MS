@@ -150,6 +150,23 @@ export function getStudentInfoList(pageStart, pageSize, search) {
   })
 }
 
+// 获取所有班级
+export function getAllClasspath() {
+  const url = `/admin/StudentInfo/${xqid}/getAllClasspath`
+  return request({
+    url: url,
+    method: 'get'
+  })
+}
+// 获取所有班级
+export function getAllClasspathByQuery(query) {
+  const url = `/admin/StudentInfo/${xqid}/${query}/getAllClasspath`
+  return request({
+    url: url,
+    method: 'get'
+  })
+}
+
 // 新增学生
 export function addStudentInfo(data) {
   const url = '/admin/StudentInfo'
@@ -239,3 +256,20 @@ export function downloadFillExcel() {
   })
 }
 
+// 获取班级订单列表
+export function getClaOrder(claName) {
+  const url = `/admin/BookTotal/getClaOrder/${xqid}/${claName}`
+  return request({
+    url: url,
+    method: 'get'
+  })
+}
+
+// 获取班级订单列表
+export function getClaStudentList(claName) {
+  const url = `/admin/StudentInfo/List/${xqid}/${claName}`
+  return request({
+    url: url,
+    method: 'get'
+  })
+}

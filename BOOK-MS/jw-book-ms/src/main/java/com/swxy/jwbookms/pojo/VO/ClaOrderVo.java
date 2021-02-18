@@ -9,11 +9,11 @@ import java.math.BigDecimal;
 public class ClaOrderVo implements Serializable {
 
     private int serialNumber;
-    private String course_title;
+    private String courseTitle;
     private String isbn;
-    private String book_name;
-    private String publishing_house;
+    private String bookName;
+    private String publishingHouse;
     private BigDecimal pricing;
-    private int student_book_count;
+    private int studentBookCount;
 
 }

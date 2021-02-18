@@ -11,8 +11,10 @@ import com.swxy.jwbookms.common.response.code.CommonCode;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.enums.RedisKey;
 import com.swxy.jwbookms.pojo.BookTotal;
+import com.swxy.jwbookms.pojo.DTO.PublishingHouseOrderDTO;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
 import com.swxy.jwbookms.pojo.VO.ClaOrderVo;
+import com.swxy.jwbookms.pojo.VO.PublishingHouseOrderVo;
 import com.swxy.jwbookms.service.BookTotalService;
 import com.swxy.jwbookms.service.impl.CommonService;
 import com.swxy.jwbookms.enums.CommonStringEnum;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -163,11 +166,27 @@ public class BookTotalController {
         commonService.downloadExcel(BookTotal.class, CommonStringEnum.Summary_Sheet.getStr(), list);
     }
 
-    @ApiOperation(value = "获取班级订单")
+    @ApiOperation(value = "获取班级订单列表")
     @GetMapping("/BookTotal/getClaOrder/{xqid}/{claName}")
     public Response getClaOrder(@PathVariable String xqid, @PathVariable String claName){
         List<ClaOrderVo> claOrder = bookTotalService.getClaOrder(xqid, claName);
         return new DataResponseResult<>(claOrder);
+    }
+
+    @ApiOperation(value = "获取出版社订单列表")
+    @GetMapping({"/BookTotal/getPhOrder/{xqid}/{phName}","/BookTotal/getPhOrder/{xqid}/{phName}/{phNames}"})
+    public Response getPhOrder(@PathVariable String xqid, @PathVariable String phName, @PathVariable String phNames){
+        List<PublishingHouseOrderDTO> phOrder = bookTotalService.getPublishingHouseOrder(xqid, phName, phNames);
+        int sum = phOrder.stream().mapToInt(PublishingHouseOrderDTO::getTotalBook).sum();
+        BigDecimal bigDecimal = phOrder.stream().map(PublishingHouseOrderDTO::getTotalPricing)
+                .reduce(BigDecimal::add)
+                .get();
+        PublishingHouseOrderVo build = PublishingHouseOrderVo.builder()
+                .phOrderlist(phOrder)
+                .phTotal(sum)
+                .phTotalPricing(bigDecimal)
+                .build();
+        return new DataResponseResult<>(build);
     }
 
 }

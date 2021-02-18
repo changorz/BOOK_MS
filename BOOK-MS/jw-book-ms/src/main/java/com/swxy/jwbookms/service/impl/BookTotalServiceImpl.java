@@ -1,12 +1,12 @@
 package com.swxy.jwbookms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.swxy.jwbookms.pojo.BookTotal;
 import com.swxy.jwbookms.mapper.BookTotalMapper;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
 import com.swxy.jwbookms.pojo.VO.ClaOrderVo;
+import com.swxy.jwbookms.pojo.DTO.PublishingHouseOrderDTO;
 import com.swxy.jwbookms.service.BookTotalService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -82,5 +82,10 @@ public class BookTotalServiceImpl extends ServiceImpl<BookTotalMapper, BookTotal
     @Override
     public List<ClaOrderVo> getClaOrder(String xqid, String claName) {
         return bookTotalMapper.getClaOrder(xqid, claName);
+    }
+
+    @Override
+    public List<PublishingHouseOrderDTO> getPublishingHouseOrder(String xqid, String phName, String phNames) {
+        return bookTotalMapper.getPublishingHouseOrder(xqid, phName, phNames);
     }
 }
