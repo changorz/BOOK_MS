@@ -175,12 +175,14 @@ public class BookTotalController {
 
     @ApiOperation(value = "获取出版社订单列表")
     @GetMapping({"/BookTotal/getPhOrder/{xqid}/{phName}","/BookTotal/getPhOrder/{xqid}/{phName}/{phNames}"})
-    public Response getPhOrder(@PathVariable String xqid, @PathVariable String phName, @PathVariable String phNames){
+    public Response getPhOrder(@PathVariable String xqid, @PathVariable String phName, @PathVariable(required = false) String phNames){
         List<PublishingHouseOrderDTO> phOrder = bookTotalService.getPublishingHouseOrder(xqid, phName, phNames);
         int sum = phOrder.stream().mapToInt(PublishingHouseOrderDTO::getTotalBook).sum();
+        phOrder.forEach(e -> {
+            e.setShool(CommonStringEnum.SCHOOL.getStr());
+        });
         BigDecimal bigDecimal = phOrder.stream().map(PublishingHouseOrderDTO::getTotalPricing)
-                .reduce(BigDecimal::add)
-                .get();
+                .reduce(BigDecimal::add).orElseGet(() -> { return new BigDecimal(0); });
         PublishingHouseOrderVo build = PublishingHouseOrderVo.builder()
                 .phOrderlist(phOrder)
                 .phTotal(sum)

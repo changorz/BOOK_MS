@@ -273,3 +273,14 @@ export function getClaStudentList(claName) {
     method: 'get'
   })
 }
+
+// 获取出版社报定但
+export function getPublishingHouseOrder(phName, phNames) {
+  const url = (phNames === '' || phNames === null)
+    ? `/admin/BookTotal/getPhOrder/${xqid}/${phName}`
+    : `/admin/BookTotal/getPhOrder/${xqid}/${phName}/${phNames}`
+  return request({
+    url: url,
+    method: 'get'
+  })
+}

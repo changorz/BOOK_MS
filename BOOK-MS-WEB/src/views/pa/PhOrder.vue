@@ -15,9 +15,13 @@
       </Select>
       <Button type="info" @click="onSearch">搜索</Button>
       <div style="display: inline-block; float: right;margin-right: 10%;margin-top: 10px; font-size: 15px">
-        <span class="expand-key">共计: </span>
+        <span class="expand-key">总数量: </span>
         <span class="expand-value">
-          <Tag color="volcano">123</Tag>元
+          <Tag color="volcano">{{count}}</Tag>
+        </span>
+        <span class="expand-key">总码洋: </span>
+        <span class="expand-value">
+          <Tag color="volcano">{{countP}}</Tag>元
         </span>
       </div>
     </div>
@@ -30,13 +34,13 @@
 </template>
 
 <script>
-import { getPublishingHouse } from '@/api/table'
+import { getPublishingHouse, getPublishingHouseOrder } from '@/api/table'
 import { getSelectorList } from '@/api/common'
 export default {
   data() {
     return {
-      // 班级列表
-      phList: [],
+      count: '0',
+      countP: '0',
       // 表格加载动画
       listLoading: false,
       listTable: [],
@@ -50,7 +54,7 @@ export default {
           title: '学校',
           key: 'shool',
           resizable: true,
-          width: 140,
+          width: 220,
           align: 'center'
         },
         {
@@ -63,7 +67,7 @@ export default {
         {
           title: '教材名称',
           key: 'bookName',
-          width: 500,
+          width: 300,
           tooltip: (h, params) => {
             const texts = params.row.bookName
             return h('div', [
@@ -114,7 +118,7 @@ export default {
           align: 'center'
         }
       ],
-      publishingHouse: '',
+      publishingHouse: '清华大学出版社',
       publishingHouseSupplement: '',
       publishingHouseList: [],
       publishingHouseSupplements: []
@@ -131,8 +135,18 @@ export default {
   },
   methods: {
     onSearch() {
-      console.log(this.publishingHouseSupplement)
-      console.log(this.publishingHouse)
+      if (this.publishingHouse === '') {
+        this.$Message.warning('出版社不能为空！')
+        return
+      }
+      getPublishingHouseOrder(this.publishingHouse, this.publishingHouseSupplement).then(res => {
+        if (res.data.phOrderlist.length === 0) {
+          this.$Message.warning('没有查询到数据！')
+        }
+        this.listTable = res.data.phOrderlist
+        this.count = res.data.phTotal
+        this.countP = res.data.phTotalPricing
+      })
     }
   }
 }
