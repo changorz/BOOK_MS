@@ -12,10 +12,12 @@ import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.enums.RedisKey;
 import com.swxy.jwbookms.pojo.BookTotal;
 import com.swxy.jwbookms.pojo.DTO.PublishingHouseOrderDTO;
+import com.swxy.jwbookms.pojo.StudentInfo;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
 import com.swxy.jwbookms.pojo.VO.ClaOrderVo;
 import com.swxy.jwbookms.pojo.VO.PublishingHouseOrderVo;
 import com.swxy.jwbookms.service.BookTotalService;
+import com.swxy.jwbookms.service.StudentInfoService;
 import com.swxy.jwbookms.service.impl.CommonService;
 import com.swxy.jwbookms.enums.CommonStringEnum;
 import com.swxy.jwbookms.util.AssertUtil;
@@ -36,8 +38,7 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -58,6 +59,8 @@ public class BookTotalController {
     private CommonService commonService;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private StudentInfoService studentInfoService;
 
     @PostMapping("/BookTotal")
     @ApiOperation(value = "填报一条记录")
@@ -190,6 +193,76 @@ public class BookTotalController {
                 .build();
         return new DataResponseResult<>(build);
     }
+
+    @ApiOperation(value = "班级表下载 - 单个")
+    @GetMapping("/BookTotal/downloadClaOrder/{xqid}/{claName}")
+    public void getBookTotalDownload(@PathVariable String xqid,@PathVariable String claName, HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        String fileName = URLEncoder.encode(BMSUtil.xqidToZh(xqid) + "学期教材发放表-" + claName, "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        // 自定义的header， 设置这个header 可见
+        response.setHeader("requestType","file");
+        response.setHeader("Access-Control-Expose-Headers", "requestType");
+        // 数据加载 开始写 数据
+        List<ClaOrderVo> claOrder = bookTotalService.getClaOrder(xqid, claName);
+        HashMap<String, String> map = new HashMap<>();
+        ArrayList<List<String>> lists = new ArrayList<>();
+        // 加载map
+        double v = claOrder.stream().map(ClaOrderVo::getPricing)
+                .reduce(BigDecimal::add).orElseGet(() -> {
+                    return new BigDecimal(0);
+                }).doubleValue();
+        map.put("title", BMSUtil.xqidToZh(xqid) + "教材发放表");
+        map.put("twoLevelCollege", studentInfoService.getTwoLevelCollegeByCla(claName));
+        map.put("claName", claName);
+        map.put("totel", v + "");
+        LambdaQueryWrapper<StudentInfo> eq = new LambdaQueryWrapper<StudentInfo>().eq(StudentInfo::getXqid, xqid).eq(StudentInfo::getCla, claName);
+        List<StudentInfo> list = studentInfoService.list(eq);
+        list.sort(Comparator.comparing(StudentInfo::getXh));
+        StringBuilder names = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            StudentInfo e = list.get(i);
+            if (i == list.size() -1) {
+                names.append(String.format("%-14s", e.getXh() + e.getStudentName()));
+            } else {
+                names.append(String.format("%-14s", e.getXh() + e.getStudentName() + ','));
+            }
+            if (i + 1 % 10 == 0){
+                names.append("\n");
+            }
+        }
+        map.put("names", names.toString());
+        // 加载list
+        ArrayList<String> listHead = new ArrayList<>();
+        listHead.add("序号");
+        listHead.add("课程名");
+        listHead.add("ISBN");
+        listHead.add("教材名称");
+        listHead.add("出版社");
+        listHead.add("单价");
+        listHead.add("人数");
+        listHead.add("已领");
+        listHead.add("签字");
+        listHead.add("备注");
+        lists.add(listHead);
+        claOrder.forEach(e -> {
+            ArrayList<String> tempList = new ArrayList<>();
+            tempList.add(e.getSerialNumber() + "");
+            tempList.add(e.getCourseTitle());
+            tempList.add(e.getIsbn());
+            tempList.add(e.getBookName());
+            tempList.add(e.getPublishingHouse());
+            tempList.add(e.getPricing().doubleValue() + "");
+            tempList.add(e.getStudentBookCount() + "");
+            tempList.add("");
+            tempList.add("");
+            tempList.add("");
+            lists.add(tempList);
+        });
+        commonService.downloadClaOrderExcel(map, lists);
+    }
+
 
 }
 

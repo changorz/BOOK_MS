@@ -43,4 +43,10 @@ public class StudentInfoServiceImpl extends ServiceImpl<StudentInfoMapper, Stude
         studentInfoMapper.selectPage(page, select);
     }
 
+    @Override
+    public String getTwoLevelCollegeByCla(String cla) {
+        StudentInfo studentInfo = studentInfoMapper.selectOne(new LambdaQueryWrapper<StudentInfo>().eq(StudentInfo::getCla, cla).groupBy(StudentInfo::getFaculty));
+        return studentInfo.getFaculty();
+    }
+
 }

@@ -88,7 +88,7 @@ public class BookTotal implements Serializable {
     @ApiModelProperty(value = "出版社全称", required = true)
     private String publishingHouse;
 
-    @ExcelProperty(value = "出版社补充", converter = publishingHouseSupplementIntgerStringConverter.class)
+    @ExcelProperty(value = "出版社补充")
     @ApiModelProperty(value = "出版社补充: 集团自编、其他类、英语类、两课类、马工程 （可以为空）")
     @Length(max = 6, message = "publishingHouseSupplement: 参数长度不能大于6。")
     private String publishingHouseSupplement;

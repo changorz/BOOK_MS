@@ -284,3 +284,13 @@ export function getPublishingHouseOrder(phName, phNames) {
     method: 'get'
   })
 }
+
+// 下载对应班级订单
+export function downloadClaOrder(claName) {
+  const url = `/admin/BookTotal/downloadClaOrder/${xqid}/${claName}`
+  return request({
+    url: url,
+    method: 'get',
+    responseType: 'blob'
+  })
+}

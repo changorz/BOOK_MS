@@ -11,6 +11,7 @@ import com.swxy.jwbookms.enums.RedisKey;
 import com.swxy.jwbookms.pojo.BookTotal;
 import com.swxy.jwbookms.pojo.XqidBean;
 import com.swxy.jwbookms.util.BMSUtil;
+import com.swxy.jwbookms.util.BMSWriterExcelUtil;
 import com.swxy.jwbookms.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -32,7 +34,7 @@ public class CommonService {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final RedisUtil redisUtil;
-
+    private final BMSWriterExcelUtil bmsWriterExcelUtil;
 
     /**
      * excel 下载
@@ -54,6 +56,23 @@ public class CommonService {
                     .sheet(shellName)
                     .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
                     .doWrite(data);
+        } catch (IOException e) {
+            // 重置response
+            response.reset();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("utf-8");
+            try {
+                response.getWriter().println(JSON.toJSONString(new ResponseResult(CommonCode.FILE_DOWNLOAD_ERR)));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+    }
+
+
+    public void downloadClaOrderExcel(Map map, List<List<String>> lists) {
+        try {
+            bmsWriterExcelUtil.writerClaExcel(map,lists,response.getOutputStream());
         } catch (IOException e) {
             // 重置response
             response.reset();

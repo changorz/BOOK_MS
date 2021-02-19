@@ -22,6 +22,7 @@
       </el-select>
       <Button type="info" @click="onSearch(claNameValue)">搜索</Button>
       <Button style="margin-left:5px;" type="primary" v-print="printObj">打印</Button>
+      <Button style="margin-left:5px;" type="primary" @click="download(claNameValue)">下载当前班级订单</Button>
       <div style="display: inline-block; float: right;margin-right: 10%;margin-top: 10px; font-size: 15px">
         <span class="expand-key">共计: </span>
         <span class="expand-value">
@@ -56,7 +57,8 @@
 </template>
 
 <script>
-import { getAllClasspathByQuery, getClaOrder, getClaStudentList } from '@/api/table'
+import { downloadClaOrder, getAllClasspathByQuery, getClaOrder, getClaStudentList } from '@/api/table'
+import { convertRes2Blob } from '@/utils/bmsUtil'
 export default {
   data() {
     return {
@@ -171,6 +173,11 @@ export default {
       // 加载名单
       getClaStudentList(value).then(res => {
         this.claList = res.queryResult.list
+      })
+    },
+    download(claName) {
+      downloadClaOrder(claName).then(res => {
+        convertRes2Blob(res)
       })
     }
   }
