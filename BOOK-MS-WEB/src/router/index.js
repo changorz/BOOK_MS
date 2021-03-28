@@ -74,7 +74,7 @@ export const constantRoutes = [
     meta: { title: '公共资源', icon: 'ziyuan' },
     children: [
       { path: 'XqidManage', name: 'XqidManage', component: () => import('@/views/common/XqidManage'), meta: { title: '学期管理', icon: 'XqidManage' }},
-      { path: 'XqidManage11', name: 'XqidManage11', component: () => import('@/views/common/XqidManage'), meta: { title: '合作出版社', icon: 'XqidManage' }},
+      { path: 'PublishingHouseManage', name: 'PublishingHouseManage', component: () => import('@/views/common/PublishingHouseManage'), meta: { title: '合作出版社', icon: 'PublishingHouseManage' }},
       { path: 'SelectorManage', name: 'SelectorManage', component: () => import('@/views/common/SelectorManage'), meta: { title: '选择列表', icon: 'SelectorManage' }}
     ]
   },
