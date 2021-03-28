@@ -39,9 +39,9 @@ public class CommonService {
     /**
      * excel 下载
      *
-     * @param clsaa
-     * @param shellName
-     * @param data
+     * @param clsaa 实体类
+     * @param shellName shell名字
+     * @param data 数据list
      */
     public void downloadExcel(Class<?> clsaa, String shellName, List<?> data) {
         // 自定义的header
@@ -70,6 +70,11 @@ public class CommonService {
     }
 
 
+    /**
+     * 自定义excel上传
+     * @param map 填充字段
+     * @param lists 数据列表
+     */
     public void downloadClaOrderExcel(Map map, List<List<String>> lists) {
         try {
             bmsWriterExcelUtil.writerClaExcel(map,lists,response.getOutputStream());
@@ -88,7 +93,6 @@ public class CommonService {
 
     /**
      * 获取学期信息
-     *
      * @return
      */
     public XqidBean getXqInfo() {
@@ -102,6 +106,20 @@ public class CommonService {
         objects.forEach(e -> strings.add((String) e));
         XqidBean bean = new XqidBean(xqid, xqidValue, strings);
         return bean;
+    }
+
+    /**
+     * 导出所有出版社的订报单
+     * @param xqid 学期ID
+     */
+    public void downloadAllPHOrder(String xqid){
+        // TODO
+        // 1. 获取所有合作的出版社
+        // 2. 获取出版社补充
+        // 3. 获取数据
+        // 4. 写入Excel对象
+        // 5. 导出
+
     }
 
 

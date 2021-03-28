@@ -18,15 +18,6 @@ export function getBookStoreList(pageStart, pageSize, search) {
   })
 }
 
-// 获取全部的出版社:admin
-export function getPublishingHouse() {
-  const url = '/admin/PublishingHouse/all'
-  return request({
-    url: url,
-    method: 'get'
-  })
-}
-
 // 新增书籍
 export function addBookStore(data) {
   const url = '/admin/BookStore'
@@ -213,6 +204,36 @@ export function importStudentInfoByExcel(data) {
     method: 'post',
     headers: { 'Content-Type': 'multipart/fill_in-data' },
     data
+  })
+}
+
+// ==================== 出版社管理 ==============================
+
+// 获取全部的出版社:admin
+export function getPublishingHouse() {
+  const url = '/admin/PublishingHouse/all'
+  return request({
+    url: url,
+    method: 'get'
+  })
+}
+
+// 新增合作出版社
+export function addPublishingHouse(data) {
+  const url = '/admin/PublishingHouse'
+  return request({
+    url: url,
+    method: 'post',
+    data
+  })
+}
+
+// 删除合作出版社
+export function deletePublishingHouse(uuid) {
+  const url = `/admin/PublishingHouse/${uuid}`
+  return request({
+    url: url,
+    method: 'delete'
   })
 }
 

@@ -261,5 +261,18 @@ public class BookTotalController {
     }
 
 
+    @ApiOperation(value = "班级表下载 - 单个")
+    @GetMapping("/BookTotal/downloadClaOrder/{xqid}/{claName}")
+    public void getBookTotalDownload(@PathVariable String xqid){
+
+
+
+
+
+
+
+    }
+
+
 }
 
