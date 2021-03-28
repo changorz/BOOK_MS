@@ -25,5 +25,19 @@ public class ServiceTest {
         System.out.println(selectAllByBookTotal);
     }
 
+    public static void main(String[] args) {
+        int i = 0;
+        do{
+            System.out.println(i++);
+        }while (++i<3);
+
+        i = 0;
+        for (; i < 3; i = ++i*2) {
+            System.out.println(i);
+        }
+
+
+    }
+
 
 }

@@ -181,9 +181,6 @@ public class BookTotalController {
     public Response getPhOrder(@PathVariable String xqid, @PathVariable String phName, @PathVariable(required = false) String phNames){
         List<PublishingHouseOrderDTO> phOrder = bookTotalService.getPublishingHouseOrder(xqid, phName, phNames);
         int sum = phOrder.stream().mapToInt(PublishingHouseOrderDTO::getTotalBook).sum();
-        phOrder.forEach(e -> {
-            e.setShool(CommonStringEnum.SCHOOL.getStr());
-        });
         BigDecimal bigDecimal = phOrder.stream().map(PublishingHouseOrderDTO::getTotalPricing)
                 .reduce(BigDecimal::add).orElseGet(() -> { return new BigDecimal(0); });
         PublishingHouseOrderVo build = PublishingHouseOrderVo.builder()

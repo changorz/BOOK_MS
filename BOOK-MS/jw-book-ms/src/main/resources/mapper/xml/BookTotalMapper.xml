@@ -44,8 +44,9 @@
             <if test="map.submitState != null and map.submitState != ''">AND submit_state = #{map.submitState}</if>
         </where>
         order by grade, course_title, cla
-    </select
-    >
+    </select>
+
+
     <select id="getClaOrder" resultType="com.swxy.jwbookms.pojo.VO.ClaOrderVo">
         SELECT (@i:=@i+1)serial_number,course_title, isbn, book_name, publishing_house, pricing, student_book_count
         FROM book_total ,(select @i:=0)t where cla = #{claName} and xqid = #{xqid}
@@ -73,7 +74,6 @@
                     AND publishing_house_supplement = #{phNames}
                 </otherwise>
             </choose>
-
         </where>
         group by isbn
     </select>

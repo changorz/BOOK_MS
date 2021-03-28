@@ -12,9 +12,19 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author chang
+ */
 @Component
 public final class BMSWriterExcelUtil {
 
+    /**
+     * 写班级订单Excel
+     * @param map 数据map
+     * @param lists 数据list
+     * @param out 输出流
+     * @throws IOException IO
+     */
     public void writerClaExcel(Map map, List<List<String>> lists, OutputStream out) throws IOException {
         ExcelWriter writer = ExcelUtil.getWriter(true);
         // 表头信息
@@ -103,4 +113,24 @@ public final class BMSWriterExcelUtil {
         writer.close();
         IoUtil.close(out);
     }
+
+
+    /**
+     * 装饰加工：在一个新的shell中写数据lists，标题为title
+     * @param writer 要操作的ExcelWriter对象
+     * @param sheelName 名称
+     * @param title 数据
+     * @param lists 标题
+     * @return ExcelWriter
+     */
+    public ExcelWriter writerSheel(ExcelWriter writer,String sheelName, String title, List<List<String>> lists){
+        if (lists == null || lists.get(0) == null || lists.get(0).size() == 0){
+            return writer;
+        }
+        writer.setSheet(sheelName);
+        writer.merge(lists.get(0).size() - 1, title);
+        writer.write(lists);
+        return writer;
+    }
+
 }

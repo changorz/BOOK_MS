@@ -44,4 +44,13 @@ public interface BookTotalService extends IService<BookTotal> {
      */
     List<PublishingHouseOrderDTO> getPublishingHouseOrder(String xqid, String phName, String phNames);
 
+    /**
+     * 获取出版社订报单
+     * @param xqid
+     * @param ph 出版社名称
+     * @param phs 出版社补充
+     * @return
+     */
+    List<List<String>> getPHOrder(String xqid, String ph, String phs);
+
 }

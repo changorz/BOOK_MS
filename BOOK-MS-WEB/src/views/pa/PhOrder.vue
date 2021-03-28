@@ -19,7 +19,7 @@
         <span class="expand-value">
           <Tag color="volcano">{{count}}</Tag>
         </span>
-        <span class="expand-key">总码洋: </span>
+        <span class="expand-key">本; 总码洋: </span>
         <span class="expand-value">
           <Tag color="volcano">{{countP}}</Tag>元
         </span>

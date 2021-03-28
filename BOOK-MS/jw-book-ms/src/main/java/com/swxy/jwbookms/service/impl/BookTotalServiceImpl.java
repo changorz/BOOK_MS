@@ -2,6 +2,7 @@ package com.swxy.jwbookms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.swxy.jwbookms.enums.CommonStringEnum;
 import com.swxy.jwbookms.pojo.BookTotal;
 import com.swxy.jwbookms.mapper.BookTotalMapper;
 import com.swxy.jwbookms.pojo.VO.BookTotalCountVo;
@@ -12,10 +13,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -86,6 +85,34 @@ public class BookTotalServiceImpl extends ServiceImpl<BookTotalMapper, BookTotal
 
     @Override
     public List<PublishingHouseOrderDTO> getPublishingHouseOrder(String xqid, String phName, String phNames) {
-        return bookTotalMapper.getPublishingHouseOrder(xqid, phName, phNames);
+        List<PublishingHouseOrderDTO> publishingHouseOrder = bookTotalMapper.getPublishingHouseOrder(xqid, phName, phNames);
+        publishingHouseOrder.forEach(e -> {
+            e.setShool(CommonStringEnum.SCHOOL.getStr());
+        });
+        return publishingHouseOrder;
+    }
+
+    @Override
+    public List<List<String>> getPHOrder(String xqid, String ph, String phs) {
+        List<PublishingHouseOrderDTO> publishingHouseOrder = bookTotalMapper.getPublishingHouseOrder(xqid, ph, phs);
+        ArrayList<List<String>> lists = new ArrayList<>();
+        AtomicInteger index = new AtomicInteger(0);
+        publishingHouseOrder.forEach(p -> {
+            ArrayList<String> strings = new ArrayList<>();
+
+            strings.add(index.getAndIncrement() + "");
+            strings.add(CommonStringEnum.SCHOOL.getStr());
+            strings.add(p.getIsbn());
+            strings.add(p.getBookName());
+            strings.add(p.getPublishingHouse());
+            strings.add(p.getAuthor());
+            strings.add(p.getPricing().toString());
+            strings.add(p.getTotalBook() + "");
+            strings.add(p.getTotalPricing().toString());
+            strings.add(p.getRemark());
+
+            lists.add(strings);
+        });
+        return lists;
     }
 }

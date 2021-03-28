@@ -15,6 +15,8 @@ public class PublishingHouseOrderDTO implements Serializable {
     private String publishingHouse;
     private String author;
     private BigDecimal pricing;
+
+    private String remark;
     /**
      * 总数量（全部班级）
      */
