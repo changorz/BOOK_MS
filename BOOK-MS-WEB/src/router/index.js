@@ -58,12 +58,12 @@ export const constantRoutes = [
     path: '/PA',
     component: Layout,
     redirect: '/PA/BookTotal',
-    meta: { title: '填报管理', icon: 'table' },
+    meta: { title: '填报管理', icon: 'BookTotal1' },
     children: [
       { path: 'BookTotal', name: 'BookTotal', component: () => import('@/views/pa/BookTotal'), meta: { title: '填报总表管理', icon: 'BookTotal' }},
       { path: 'ClaOrder', name: 'ClaOrder', component: () => import('@/views/pa/ClaOrder'), meta: { title: '班级订单', icon: 'ClaOrder' }},
       { path: 'PhOrder', name: 'PhOrder', component: () => import('@/views/pa/PhOrder'), meta: { title: '报订单', icon: 'PhOrder' }},
-      { path: 'BookTotalNull', name: 'BookTotalNull', component: () => import('@/views/pa/BookTotalNull'), meta: { title: '开启填报', icon: 'BookTotal' }},
+      { path: 'BookTotalNull', name: 'BookTotalNull', component: () => import('@/views/pa/BookTotalNull'), meta: { title: '开启填报', icon: 'BookTotalNull' }},
       { path: 'TimeChange', name: 'TimeChange', component: () => import('@/views/pa/TimeChange'), meta: { title: '填报时间修改' }, hidden: true }
     ]
   },

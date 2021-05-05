@@ -1,15 +1,22 @@
 package com.swxy.jwbookms.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.alibaba.fastjson.JSON;
+import com.swxy.jwbookms.common.exception.ExceptionCast;
 import com.swxy.jwbookms.common.response.ResponseResult;
 import com.swxy.jwbookms.common.response.code.CommonCode;
 import com.swxy.jwbookms.common.response.plus.DataResponseResult;
 import com.swxy.jwbookms.enums.RedisKey;
 import com.swxy.jwbookms.pojo.BookTotal;
+import com.swxy.jwbookms.pojo.PublishingHouse;
 import com.swxy.jwbookms.pojo.XqidBean;
+import com.swxy.jwbookms.service.BookTotalService;
+import com.swxy.jwbookms.service.PublishingHouseService;
 import com.swxy.jwbookms.util.BMSUtil;
 import com.swxy.jwbookms.util.BMSWriterExcelUtil;
 import com.swxy.jwbookms.util.RedisUtil;
@@ -35,6 +42,8 @@ public class CommonService {
     private final HttpServletResponse response;
     private final RedisUtil redisUtil;
     private final BMSWriterExcelUtil bmsWriterExcelUtil;
+    private final PublishingHouseService publishingHouseService;
+    private final BookTotalService bookTotalService;
 
     /**
      * excel 下载
@@ -113,9 +122,21 @@ public class CommonService {
      * @param xqid 学期ID
      */
     public void downloadAllPHOrder(String xqid){
-        // TODO
         // 1. 获取所有合作的出版社
+        List<PublishingHouse> publishingHouseList = publishingHouseService.list();
         // 2. 获取出版社补充
+        Set<Object> objects = redisUtil.sGet(RedisKey.PUBLIS_HINGHOU_SESERVICE.getValue());
+        if (CollectionUtil.isEmpty(publishingHouseList)){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+
+        publishingHouseList.forEach(publishingHouse -> {
+            List<List<String>> phOrder = bookTotalService.getPHOrder(xqid, publishingHouse.getPublishingHouse(), "");
+            bmsWriterExcelUtil.writerSheel(writer, publishingHouse.getPublishingHouse(), publishingHouse.getPublishingHouse(), phOrder);
+
+
+        });
         // 3. 获取数据
         // 4. 写入Excel对象
         // 5. 导出

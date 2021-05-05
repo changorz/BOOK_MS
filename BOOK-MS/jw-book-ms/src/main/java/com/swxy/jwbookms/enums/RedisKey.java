@@ -7,7 +7,9 @@ public enum RedisKey {
     // 所有xqid
     XQID_LIST("xqidList"),
     // 学期id时间
-    XQID_Time("xqidTime");
+    XQID_Time("xqidTime"),
+    // 出版社补充
+    PUBLIS_HINGHOU_SESERVICE("publishingHouseSupplements");
 
     private String value;
 
