@@ -110,8 +110,7 @@ public class BookTotalController {
         // 创建数据
         int i = bookTotalService.insertBookTotalByCurriclumPlan(xqid);
         String successMsg = "操作成功，更新行数：" + i;
-        String failMsg = "操作失败，影响行数: " + i;
-        return ResponseUtil.toResult(i > 0, successMsg, failMsg);
+        return ResponseUtil.toResult(i >= 0, successMsg, null);
     }
 
     @Transactional

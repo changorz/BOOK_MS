@@ -31,10 +31,14 @@ public class BookTotalServiceImpl extends ServiceImpl<BookTotalMapper, BookTotal
 
     private final BookTotalMapper bookTotalMapper;
 
+    /**
+     * 按开课计划和学期id去生成总表
+     * @param xqid 学期ID
+     * @return
+     */
     @Override
     public int insertBookTotalByCurriclumPlan(String xqid) {
-        Integer integer = bookTotalMapper.selectCount(new LambdaQueryWrapper<BookTotal>().eq(BookTotal::getXqid, xqid));
-        return integer > 0 ? 0 - integer : bookTotalMapper.insertBookTotalByCurriclumPlan(xqid);
+        return bookTotalMapper.insertBookTotalByCurriclumPlan(xqid);
     }
 
     @Override

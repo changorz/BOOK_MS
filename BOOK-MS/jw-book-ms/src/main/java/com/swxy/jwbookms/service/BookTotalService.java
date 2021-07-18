@@ -20,6 +20,11 @@ import java.util.Map;
  */
 public interface BookTotalService extends IService<BookTotal> {
 
+    /**
+     * 按开课计划和学期id去生成总表
+     * @param xqid
+     * @return
+     */
     public int insertBookTotalByCurriclumPlan(String xqid);
 
     void queryBookTotalServiceByXqid(String xqid, Page page, Map<String, String> map);
