@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/BOOK_MS-master.iml" filepath="$PROJECT_DIR$/.idea/BOOK_MS-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BOOK_MS/BOOK-MS/jw-book-ms/jw-book-ms.iml" filepath="$PROJECT_DIR$/BOOK_MS/BOOK-MS/jw-book-ms/jw-book-ms.iml" />
+    </modules>
+  </component>
+</project>
