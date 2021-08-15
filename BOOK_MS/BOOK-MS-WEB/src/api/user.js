@@ -30,10 +30,11 @@ export function logout() {
   })
 }
 
-export function getmassage() {
+export function getmassage(value) {
 
+  const url = `/massage/getUserbyid/${value}`
   return request({
-    url: '/api/massage/getUserbyid',
+    url: url,
     method: 'get'
   })
 }

@@ -3,6 +3,7 @@
       <el-container>
         <el-main >
           <el-col >
+
             <div class="demo-basic--circle">
               <div>
                 <el-avatar
@@ -13,42 +14,42 @@
             </div>
           </el-col>
           <el-input
-            v-model="count.name"
+            v-model="name"
             type="text"
             show-word-limit
           ></el-input>
           <el-input
-            v-model="count.gender"
+            v-model="gender"
             type="text"
             show-word-limit
           ></el-input>
           <el-input
-            v-model="count.age"
+            v-model="age"
             type="text"
             show-word-limit
           ></el-input>
           <el-input
-            v-model="count.address"
+            v-model="address"
             show-word-limit
           ></el-input>
           <el-input
-            v-model="count.qq"
+            v-model="qq"
             type="text"
             show-word-limit
           ></el-input>
           <el-input
-            v-model="count.email"
+            v-model="email"
             type="text"
             show-word-limit
           ></el-input>
 
           <el-input
-            v-model="count.username"
+            v-model="username"
             type="text"
             show-word-limit
           ></el-input>
           <el-input
-            v-model="count.password"
+            v-model="password"
             type="text"
             show-password
           ></el-input>
@@ -68,28 +69,31 @@
         name: "my_message",
       data() {
         return {
-          count:{
-            address: '北京',
-            age: '15',
-            email: 'zhangsan@qq.com',
-            gender: '女',
-            id:'',
-            name: '张三',
-            password: '123',
-            qq: '123456',
-            username: 'zhangsan',
-          },
+          text: '',
+          input1: '',
+          input2: '',
+          input3: '',
+          input4: '',
+          input5: '',
+          input6: '',
+          input7: '',
+          input8: '',
           circleUrl:
             'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
           sizeList: ['large'],
+          name: '张三',
+          gender: '女',
+          age: '15',
+          address: '北京',
+          qq: '123456',
+          email: 'zhangsan@qq.com',
+          username: 'zhangsan',
+          password: '123',
         }
       },
       created(){
-
-
-        getmassage().then(res =>{
-          this.count=res.data;
-          // console.log(res);
+        getInfo.then(res =>{
+          console.log(res);
         })
 
       }
