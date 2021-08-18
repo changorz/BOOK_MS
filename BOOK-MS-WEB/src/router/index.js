@@ -42,6 +42,14 @@ export const constantRoutes = [
     ]
   },
   {
+    path:'/me',
+    component: Layout,
+    redirect: '/message',
+    children: [
+      { path: '/message', name: 'message', component: () => import('@/views/usercenter/my_message')}
+    ]
+  },
+  {
     path: '/tableImport',
     component: Layout,
     redirect: '/tableImport/BookStore',

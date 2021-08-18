@@ -19,9 +19,9 @@ spring:
   datasource:
     #数据源基本配置
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/bs?useSSL=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&rewriteBatchedStatements=true
+    url: jdbc:mysql://localhost:3306/day17?useSSL=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&rewriteBatchedStatements=true
     username: root
-    password: root
+    password: pz520520
     # 数据源其他配置
     initialSize: 5
     minIdle: 5
